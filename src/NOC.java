@@ -18,7 +18,7 @@ public class NOC {
 					ClassParser parser = new ClassParser(in, file[i].getName());	        
 					JavaClass clazz = parser.parse();
 	        
-	        		if(clazz.getSuperclassName().equals(checkfile.getName().replaceFirst("[.][^.]+$", ""))) {
+	        		if(clazz.getSuperclassName().equals(checkfile.getName().replaceFirst("[.][^.]+$", "")) || clazz.getSuperclassName().endsWith("."+checkfile.getName().replaceFirst("[.][^.]+$", ""))) {
 					children++;
 	        		}
 			}
@@ -36,7 +36,7 @@ public class NOC {
         int ldit = 0;
         
 		for(int i = 0; i < fil.length; i++) {
-		if(sclazz.getSuperclassName().equals(fil[i].getName().replaceFirst("[.][^.]+$", ""))) {
+		if(sclazz.getSuperclassName().equals(fil[i].getName().replaceFirst("[.][^.]+$", "")) || sclazz.getSuperclassName().endsWith("."+fil[i].getName().replaceFirst("[.][^.]+$", ""))) {
 			sin = new FileInputStream(fil[i]);
 			sparser = new ClassParser(sin, fil[i].getName());
 			sclazz = sparser.parse();

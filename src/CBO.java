@@ -43,6 +43,7 @@ public class CBO {
 		ArrayList<String> ref1 = new ArrayList<>();
 		
 		ArrayList<Integer> CBO = new ArrayList<>();
+		CBO.clear();
 		
 		try (InputStream in = new FileInputStream(file)) {
 	        ClassParser parser = new ClassParser(in, file.getName());
@@ -66,9 +67,13 @@ public class CBO {
 	                }
 	            }
 	        }
-	        
+			
 			for(int i = 0; i < fil.length; i++) {
-				fanout = fanout + Collections.frequency(ref1, fil[i].getName().replaceFirst("[.][^.]+$", ""));
+				for(int j = 0; j < ref1.size(); j++) {
+					if((ref1.get(j).endsWith("."+fil[i].getName().replaceFirst("[.][^.]+$", "")) || ref1.get(j).equals(fil[i].getName().replaceFirst("[.][^.]+$", "")))) {
+						fanout++;
+					}
+				}
 			}
 	        	        
 			for(int y = 0; y < fil.length; y++) {
@@ -149,7 +154,13 @@ public class CBO {
 	    		}
 	    	}
 	    	
-	    	fanin = fanin + Collections.frequency(ref1, checkfile.getName().replaceFirst("[.][^.]+$", ""));
+//	    	fanin = fanin + Collections.frequency(ref1, checkfile.getName().replaceFirst("[.][^.]+$", ""));	    	
+
+				for(int j = 0; j < ref1.size(); j++) {
+					if(ref1.get(j).endsWith("."+checkfile.getName().replaceFirst("[.][^.]+$", "")) || ref1.get(j).equals(checkfile.getName().replaceFirst("[.][^.]+$", ""))) {
+						fanin++;
+					}
+				}
 	    			
 	    	refMap.put(className, referees);
 		}

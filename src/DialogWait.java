@@ -28,7 +28,9 @@ public class DialogWait {
 
 	    Window win = SwingUtilities.getWindowAncestor((AbstractButton) evt.getSource());
 	    dialog = new JDialog(win, msg, JDialog.ModalityType.APPLICATION_MODAL);
-
+	    dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+	    
+	    
 	    JProgressBar progressBar = new JProgressBar();
 	    progressBar.setIndeterminate(true);
 	    JPanel panel = new JPanel(new BorderLayout());

@@ -132,6 +132,7 @@ public class MainFrame extends JFrame implements ActionListener{
 				try {
 					MainFrame frame = new MainFrame();
 					frame.setVisible(true);
+					frame.setResizable(false);
 					ImageIcon icon = new ImageIcon("C:\\Users\\anasz\\eclipse-workspace\\FYP\\logo.png");
 					frame.setIconImage(icon.getImage());
 				} catch (Exception e) {
@@ -314,27 +315,61 @@ public class MainFrame extends JFrame implements ActionListener{
 				int rowcount = model.getRowCount();
 				int[] column1 = new int[rowcount];
 				int[] column2 = new int[rowcount];
+				double[] column3 = new double[rowcount];
+				boolean first = false;
+				boolean second = false;
 				coly = table.getColumnName(columns[0]);
 				colx = table.getColumnName(columns[1]);
 
 				for (int i = 0; i < columns.length; i++) {
 					for(int row = 0; row < rowcount; row++) {
-					if(i == 0) {
+									
+//						System.out.println(columns[i]);
+					
+					if(columns[i] == 6 && i == 0) {
+						int column = table.convertColumnIndexToModel(columns[i]);
+				        column3[row] = (double) model.getValueAt(row, column);;
+				        first = true;
+					}
+					else if(columns[i] == 6 && i == 1){
+						int column = table.convertColumnIndexToModel(columns[i]);
+				        column3[row] = (double) model.getValueAt(row, column);;
+				        second = true;
+					}
+					
+					if(i == 0 && columns[i] != 6) {
 				        int column = table.convertColumnIndexToModel(columns[i]);
 				        column1[row] = (int) model.getValueAt(row, column);
 				    }
-					else if(i == 1) {
+					else if(i == 1 && columns[i] != 6) {
 						int column = table.convertColumnIndexToModel(columns[i]);
-				        column2[row] = (int) model.getValueAt(row, column);
+						column2[row] = (int) model.getValueAt(row, column);
 					}
 					}
-				}
+				}	
 				
-					bugs.setText("Correl:"+WeMovin.Calculatecorrelation(column1, column2));					
+					if(first) {
+						bugs.setText("Correl:"+WeMovin.Calculatecorrelation(column3, column2));
+					
+					}
+					else if(second) {
+						bugs.setText("Correl:"+WeMovin.Calculatecorrelation(column3, column1));
+					}
+					else {
+						bugs.setText("Correl:"+WeMovin.Calculatecorrelation(column1, column2));	
+					}
 				
 				
 				for(int i = 0; i < column1.length;i++) {
-					data.add(column1[i], column2[i]);
+					if(first) {
+						data.add(column3[i], column2[i]);
+					}
+					else if(second) {
+						data.add(column3[i], column1[i]);
+					}
+					else {
+						data.add(column1[i], column2[i]);
+					}
 				}
 				dataset.addSeries(data);
 
@@ -1004,22 +1039,22 @@ public class MainFrame extends JFrame implements ActionListener{
 	    		  }
 	  			instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have too many lines of code,"+"\n"+"this can result in higher complexity and bugs."+"\n"+"Revist these classes!");
 	  			}
-	    	  
+	    	 
 	    	  else if (colindex == 6) {
 	    		  for(int i = 0; i < table.getRowCount(); i++) {
-	    			  if((int) table.getValueAt(i, colindex) > 10) {
+	    			  if(((double) table.getValueAt(i, colindex) > 5)) {
 	    				  classnames.add(table.getValueAt(i, 0).toString());
 	    			  }
 	    		  }
-	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high value of complexity"+"\n"+"This can result in a higher number of bugs"+"\n"+"please ensure there are not many branches of if statements!");
-	    	  }
+	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high value of complexity"+"\n"+"This can result in a higher number of bugs"+"\n"+"please ensure there are not many branches of if statements!" + "\n"+Output.getccoutput());
+	    	  } 
 	    	  else if (colindex == 7) {
 	    		  for(int i = 0; i < table.getRowCount(); i++) {
 	    			  if((int) table.getValueAt(i, colindex) > 5) {
 	    				  classnames.add(table.getValueAt(i, 0).toString());
 	    			  }
 	    		  }
-	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of Fan In, this can result in bugs"+"\n"+"Ensure that the classes calling this class can operate on their own!");
+	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of Fan In, this can result in bugs"+"\n"+"Ensure that the classes calling this class can operate on their own!"+"\n"+Output.getfioutput());
 	    	  }
 	    	  else if (colindex == 8) {
 	    		  for(int i = 0; i < table.getRowCount(); i++) {
@@ -1027,7 +1062,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	    				  classnames.add(table.getValueAt(i, 0).toString());
 	    			  }
 	    		  }
-	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of Fan Out, this can result in bugs"+"\n"+"Ensure that the classes can operate on their own, otherwise move the methods to the called classes");
+	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of Fan Out, this can result in bugs"+"\n"+"Ensure that the classes can operate on their own, otherwise move the methods to the called classes" + "\n" + Output.getfooutput());
 	    	  }
 	    	  else if (colindex == 9) {
 	    		  for(int i = 0; i < table.getRowCount(); i++) {
@@ -1043,7 +1078,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	    				  classnames.add(table.getValueAt(i, 0).toString());
 	    			  }
 	    		  }
-	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of methods, this can lead to bugs and higher complexity"+"\n"+"if the same class has a high value of CBO, you can move some methods to other classes"+"\n"+"A class wiht too many methods can be dangerous for the system!");
+	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of methods, this can lead to bugs and higher complexity"+"\n"+"if the same class has a high value of CBO, you can move some methods to other classes"+"\n"+"A class wiht too many methods can be dangerous for the system!"+"\n"+Output.getmethoutput());
 	    	  }
 	    	  else if (colindex == 11) {
 	    		  for(int i = 0; i < table.getRowCount(); i++) {
@@ -1059,7 +1094,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	    				  classnames.add(table.getValueAt(i, 0).toString());
 	    			  }
 	    		  }
-	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of children, this can lower maintainability and durability"+"\n"+"Please avoid extending too many classes this can make it harder for troubleshoot!");
+	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of children, this can lower maintainability and durability"+"\n"+"Please avoid extending too many classes this can make it harder for troubleshoot!"+"\n"+Output.getnocoutput());
 	    	  }
 	    	  else if (colindex == 13) {
 	    		  for(int i = 0; i < table.getRowCount(); i++) {
@@ -1067,7 +1102,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	    				  classnames.add(table.getValueAt(i, 0).toString());
 	    			  }
 	    		  }
-	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Are very low in the depth inheritance tree of the class!"+"\n"+"Check the other metrics and try to solve the issues within your system to lower the inheritance index."+"\n"+"The more classes are extended from one class the harder it is to trace back and troubleshoot!");
+	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Are very low in the depth inheritance tree of the class!"+"\n"+"Check the other metrics and try to solve the issues within your system to lower the inheritance index."+"\n"+"The more classes are extended from one class the harder it is to trace back and troubleshoot!"+"\n"+Output.getditoutput());
 	    	  }
 	    	  else if (colindex == 14) {
 	    		  for(int i = 0; i < table.getRowCount(); i++) {
@@ -1075,7 +1110,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	    				  classnames.add(table.getValueAt(i, 0).toString());
 	    			  }
 	    		  }
-	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of Bugs and errors registered!"+"\n"+"Check the other metrics and try to solve the issues within your system to lower the number of bugs.");
+	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of Bugs and errors registered!"+"\n"+"Check the other metrics and try to solve the issues within your system to lower the number of bugs."+"\n"+Output.getbugoutput());
 	    	  }
 	    	  else {
 	    		  instructions.setText("LOC = returns Lines of Code in the class"+"\n"+

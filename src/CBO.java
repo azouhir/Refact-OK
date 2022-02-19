@@ -32,14 +32,19 @@ public class CBO {
 		
 	}
 	
-	
+	static StringBuffer out = new StringBuffer();
+	static StringBuffer inp = new StringBuffer();
+	static StringBuffer meth = new StringBuffer();
 
 //First let's get all the classes
-	public static ArrayList fanout(File file, Map<String, Set<String>> refMap, File[] fil)
+	public static ArrayList fanout(File file, Map<String, Set<String>> refMap, File[] fil, boolean produce)
 	        throws IOException {
 	    
 		int fanout = 0;
 		int fanin = 0;
+		out = new StringBuffer();
+		inp = new StringBuffer();
+		
 		ArrayList<String> ref1 = new ArrayList<>();
 		
 		ArrayList<Integer> CBO = new ArrayList<>();
@@ -71,6 +76,10 @@ public class CBO {
 			for(int i = 0; i < fil.length; i++) {
 				for(int j = 0; j < ref1.size(); j++) {
 					if((ref1.get(j).endsWith("."+fil[i].getName().replaceFirst("[.][^.]+$", "")) || ref1.get(j).equals(fil[i].getName().replaceFirst("[.][^.]+$", "")))) {
+						String temp = "Class " + file.getName() + " is calling class: " + fil[i].getName() + "\n";
+						out.append(temp);
+						out.append("\n");
+						out.append("");
 						fanout++;
 					}
 				}
@@ -97,6 +106,15 @@ public class CBO {
 		
 		int tot = fanin + fanout;
 		
+		if(produce && fanout > 5) {
+			Output.setfooutput(out.toString());
+//			System.out.println(out.toString());
+		}
+		
+		if(produce && fanin > 5) {
+			Output.setfioutput(inp.toString());
+		}
+		
 		CBO.add(fanin);
 		CBO.add(fanout);
 		CBO.add(tot);
@@ -105,20 +123,30 @@ public class CBO {
         return CBO;
 	}
 
-	public static int numberofmethods(File file) throws IOException{
+	public static int numberofmethods(File file, boolean produce) throws IOException{
 		
+		meth = new StringBuffer();
 		int count = -1;
 		
 		try (InputStream in = new FileInputStream(file)) {
 		
+			meth.append(file.getName());
 			ClassParser parser = new ClassParser(in, file.getName());
 			JavaClass clazz = parser.parse();
 			for (org.apache.bcel.classfile.Method method: clazz.getMethods()) {
 				Code code = method.getCode();
-
+				String temp = method.getName();
+				meth.append(temp);
+				meth.append("\n");
+				meth.append("");
 				count++;
 			} 
 		} 
+		
+		if(produce && count > 15) {
+			Output.setmethoutput(meth.toString());
+		}
+		
 		return count;
 	}
 	
@@ -158,6 +186,10 @@ public class CBO {
 
 				for(int j = 0; j < ref1.size(); j++) {
 					if(ref1.get(j).endsWith("."+checkfile.getName().replaceFirst("[.][^.]+$", "")) || ref1.get(j).equals(checkfile.getName().replaceFirst("[.][^.]+$", ""))) {
+						String temp = "Class " + checkfile.getName() + " is being called by class: " + file.getName() + "\n";
+						inp.append(temp);
+						inp.append("\n");
+						inp.append("");
 						fanin++;
 					}
 				}

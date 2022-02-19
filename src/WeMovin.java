@@ -22,6 +22,8 @@ import java.util.stream.Stream;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.stream.events.Characters;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 public class WeMovin {
 	
 	static int lines = 0;
@@ -41,6 +43,9 @@ public class WeMovin {
 	static File file3;
 	static String current;
 	static List XY = new ArrayList();
+	static File[] javafiles;
+	static File[] tempclassfiles;
+	
 	
 	
 	static boolean print = false;
@@ -199,6 +204,26 @@ public class WeMovin {
 		
 		file2 = new File(src);
 		file3 = new File(bin);
+		
+//		ArrayUtils.removeAll(javafiles, javafiles.length);
+//		ArrayUtils.removeAll(tempclassfiles, tempclassfiles.length);
+		
+		javafiles = file2.listFiles();
+		tempclassfiles = file3.listFiles();
+		ArrayList<File> classfiles = new ArrayList<>();
+		String[] srcnames = new String[file2.listFiles().length];
+		
+		for(int i = 0; i < javafiles.length; i++) {
+			srcnames[i] = javafiles[i].getName().replaceFirst("[.][^.]+$", "");
+		}
+
+			for(int j = 0; j < tempclassfiles.length; j++) {
+				if(ArrayUtils.contains(srcnames, tempclassfiles[j].getName().replaceFirst("[.][^.]+$", ""))) {					
+					classfiles.add(tempclassfiles[j]);
+				}
+			}
+			
+		tempclassfiles = classfiles.toArray(new File[classfiles.size()]);	
 	}
 	
 	public static File getFile() {
@@ -267,10 +292,10 @@ public class WeMovin {
 	    
         if(print == false) {
         if(countlines(listOfFiles[i]) >= lines) {
-        	if(CBO.numberofmethods(listofFiles[i]) >= methods) {
-        		if((Integer)CBO.fanout(listofFiles[i], map, listofFiles).get(2) >= cbo) {
-        			if((Integer)CBO.fanout(listofFiles[i], map, listofFiles).get(0) >= fanin) {
-        				if((Integer)CBO.fanout(listofFiles[i], map, listofFiles).get(1) >= fanout) {        					
+        	if(CBO.numberofmethods(listofFiles[i], false) >= methods) {
+        		if((Integer)CBO.fanout(listofFiles[i], map, listofFiles, false).get(2) >= cbo) {
+        			if((Integer)CBO.fanout(listofFiles[i], map, listofFiles, false).get(0) >= fanin) {
+        				if((Integer)CBO.fanout(listofFiles[i], map, listofFiles, false).get(1) >= fanout) {        					
         		System.out.println("Class: " + listOfFiles[i].getName());
         		Printing(line0.toString(),line,listOfFiles[i],listofFiles[i],listofFiles, listOfFiles);
         		System.out.println("");
@@ -302,8 +327,11 @@ public class WeMovin {
 		try {	
 		Map<String,Set <String>> map = new HashMap<String, Set<String>>();
 		
-		File[] listOfFiles = file2.listFiles();
-        File[] listofFiles = file3.listFiles();
+/*		File[] listOfFiles = file2.listFiles();
+        File[] listofFiles = file3.listFiles(); */
+		
+		File[] listOfFiles = javafiles;
+        File[] listofFiles = tempclassfiles;
         
         for(int i = 0; i < listOfFiles.length; i++) {
         	       
@@ -324,12 +352,12 @@ public class WeMovin {
         		int three = countsinglelinecomments(line.toString());
         		int four = countmultilinecomments(line0.toString());
         		int five = countidentation(listOfFiles[i]);
-        		int six = Cyclomatic.complexity(line0.toString());
+        		double six = Cyclomatic.complexity(line0.toString(), listOfFiles[i].getName(), listofFiles[i]);
 //        		int six = cyclomaticcomplexity(line);
-        		int seven = (int) CBO.fanout(listofFiles[i], map, listofFiles).get(0);
-        		int eight = (int) CBO.fanout(listofFiles[i], map, listofFiles).get(1);
-        		int nine = (int) CBO.fanout(listofFiles[i], map, listofFiles).get(2);
-        		int ten = CBO.numberofmethods(listofFiles[i]);
+        		int seven = (int) CBO.fanout(listofFiles[i], map, listofFiles, false).get(0);
+        		int eight = (int) CBO.fanout(listofFiles[i], map, listofFiles, false).get(1);
+        		int nine = (int) CBO.fanout(listofFiles[i], map, listofFiles, true).get(2);
+        		int ten = CBO.numberofmethods(listofFiles[i], true);
         		int eleven = Group.loadGroups(listofFiles[i]).size();
         		int twelve = NOC.noc(listofFiles,listofFiles[i],0);
         		int thirteen = NOC.DIT(listofFiles[i], 0, listofFiles);
@@ -348,7 +376,8 @@ public class WeMovin {
         									if(twelve >= noc) {
         										if(thirteen >= dit) {
         											if(fourteen >= bug1) {
-        			
+        												
+//        												double sixteen = six/ ten;
         												row[0] = zero;
         												row[1] = one;
         												row[2] = two;
@@ -434,6 +463,38 @@ public class WeMovin {
 		    // correlation is just a normalized covariation
 		    return cov / sigmax / sigmay;
 		  }
+	  
+	  public static double Calculatecorrelation(double[] c1, int[] c2) {
+		  
+		    double sx = 0.0;
+		    double sy = 0.0;
+		    double sxx = 0.0;
+		    double syy = 0.0;
+		    double sxy = 0.0;
+
+		    int n = c1.length;
+
+		    for(int i = 0; i < n; ++i) {
+		      double x = c1[i];
+		      double y = c2[i];
+
+		      sx += x;
+		      sy += y;
+		      sxx += x * x;
+		      syy += y * y;
+		      sxy += x * y;
+		    }
+
+		    // covariation
+		    double cov = sxy / n - sx * sy / n / n;
+		    // standard error of x
+		    double sigmax = Math.sqrt(sxx / n -  sx * sx / n / n);
+		    // standard error of y
+		    double sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
+
+		    // correlation is just a normalized covariation
+		    return cov / sigmax / sigmay;
+		  }
 	
 	public static void Printing (String line0, StringBuffer line, File file, File file2, File[] file3, File[] file4) throws IOException {
 
@@ -453,13 +514,13 @@ public class WeMovin {
         
         //TEST
         
-        System.out.println("Fan In: " +  CBO.fanout(file2, map, file3).get(0));
+        System.out.println("Fan In: " +  CBO.fanout(file2, map, file3, false).get(0));
         
-        System.out.println("Fan Out: " +  CBO.fanout(file2, map, file3).get(1));
+        System.out.println("Fan Out: " +  CBO.fanout(file2, map, file3, false).get(1));
         
-        System.out.println("CBO: " +  CBO.fanout(file2, map, file3).get(2));
+        System.out.println("CBO: " +  CBO.fanout(file2, map, file3, false).get(2));
         
-        System.out.println("WMC: " + CBO.numberofmethods(file2));
+        System.out.println("WMC: " + CBO.numberofmethods(file2, false));
         
         System.out.println("LCOM4: " + Group.loadGroups(file2).size());
         

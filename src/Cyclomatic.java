@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -18,9 +19,10 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 
 public class Cyclomatic {
 	
-	static int cc = 0;	
+	static double cc = 0;
+	static StringBuffer output = new StringBuffer();
 	
-	public static int complexity(String line) {
+	public static double complexity(String line, String classname, File file) {
 		
 		ASTParser parser = ASTParser.newParser(AST.JLS3);
 		parser.setSource(line.toCharArray());
@@ -28,56 +30,97 @@ public class Cyclomatic {
 		
 		final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
  
+		cc = 0;
+		output = new StringBuffer();
+		
+		output.append(classname);
+		output.append("\n");
+		output.append("");
 		
 		cu.accept(new ASTVisitor() {
 			
 			public boolean visit(SwitchCase node) {				
 				cc++;
-				return false;
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return true;
 			}
 			
 			public boolean visit(SwitchStatement node) {
 				cc++;
-				return false;
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return true;
 			}
 			
 			public boolean visit(IfStatement node) {
 				cc++;
-				return false;
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return true;
 			}
 			
 			public boolean visit(ForStatement node) {
 				cc++;
-				return false;
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return true;
 			}
 			
 			public boolean visit(WhileStatement node) {
 				cc++;
-				return false;
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return true;
 			}
 			
 			public boolean visit(CatchClause node) {
 				cc++;
-				return false;
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return true;
 			}
 			
 			public boolean visit(BreakStatement node) {
 				cc++;
-				return false;
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return true;
 			}
 			
 			public boolean visit(ThrowStatement node) {
 				cc++;
-				return false;
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return true;
 			}
 			
 			public boolean visit(DoStatement node) {
 				cc++;
-				return false;
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return true;
 			}
 
 		});
 		
+		try {
+			double result = cc / CBO.numberofmethods(file, false);
+			if(result > 5) {
+				Output.setccoutput(output.toString());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return cc;
 	}
 }

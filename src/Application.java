@@ -15,6 +15,7 @@ public class Application {
 	private static final String FINDSECBUGS_JAR_PATH = "C:\\Users\\anasz\\Downloads\\FindSec\\findsecbugs-plugin-1.9.0.jar";
 //	private static final String TARGET_DIR_PATH = WeMovin.Bin();
 	private static String TARGET_DIR_PATH;
+	StringBuffer repo = new StringBuffer();
 	
 	public static void setdir(String DIR) {
 		TARGET_DIR_PATH = DIR;
@@ -31,6 +32,8 @@ public class Application {
 		
 		Project project = new Project();
 		
+		repo = new StringBuffer();
+		
 		addPlugin();
 		setupFiles(project);
 		
@@ -45,6 +48,23 @@ public class Application {
 		findBugs.setUserPreferences(defaultUserPreferences);
 		
 		findBugs.execute();
+		
+		File file = new File(TARGET_DIR_PATH);
+		Object[] temp = bugReporter.getBugCollection().getCollection().toArray();
+		repo.append(file.getName());
+		repo.append("\n");
+		for(int i = 0; i < bugReporter.getBugCollection().getCollection().size(); i++) {
+		String temp1 = temp[i].toString();
+		repo.append(temp1);
+		repo.append("\n");
+		repo.append("");
+		}
+		
+		if(bugReporter.getBugCollection().getCollection().size() > 5) {
+			Output.setbugoutput(repo.toString());
+		}
+		
+		
 		
 		return Collections.unmodifiableCollection(findBugs.getBugReporter().getBugCollection().getCollection());
 		

@@ -17,44 +17,45 @@ public class StatusColumnCellRenderer extends DefaultTableCellRenderer {
 	                setBackground(Color.decode("#58D9FF"));
 	            }
 	            
-	            else if ((int) value > 100 && column == 1) { 
+	            else if (column == 1 && (int) value > 100) { 
 //	            	setForeground(Color.decode("#57596D"));
 	                setForeground(Color.RED);
 	            } 
 	            
-	            else if ((int) value > 10 && column == 6) {
+	            
+	            else if (column == 6 && (double) value > 5) {
 	            	setForeground(Color.RED);
 	            }
 	            
-	            else if ((int) value > 5 && column == 7) {
+	            else if (column == 7 && (int) value > 5) {
 	            	setForeground(Color.RED);
 	            }
 	            
-	            else if ((int) value > 5 && column == 8) {
+	            else if (column == 8 && (int) value > 5) {
 	            	setForeground(Color.RED);
 	            }
 	            
-	            else if ((int) value > 10 && column == 9) {
+	            else if (column == 9 && (int) value > 10) {
 	            	setForeground(Color.RED);
 	            }
 	            
-	            else if ((int) value > 15 && column == 10) {
+	            else if (column == 10 && (int) value > 15) {
 	            	setForeground(Color.RED);
 	            }
 	            
-	            else if ((int) value != 1 && column == 11) {
+	            else if (column == 11 && (int) value != 1) {
 	            	setForeground(Color.RED);
 	            }
 	            
-	            else if ((int) value > 5 && column == 12) {
+	            else if (column == 12 && (int) value > 5) {
 	            	setForeground(Color.RED);
 	            }
 	            
-	            else if ((int) value > 5 && column == 13) {
+	            else if (column == 13 && (int) value > 5) {
 	            	setForeground(Color.RED);
 	            }
 	            
-	            else if((int) value > 5 && column == 14) {
+	            else if(column == 14 && (int) value > 5) {
 	            	setForeground(Color.RED);
 	            }
 	            

@@ -8,6 +8,9 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.JavaClass;
 
 public class NOC {
+	
+	static StringBuffer nocput = new StringBuffer();
+	static StringBuffer ditput = new StringBuffer();
 
 	public static int noc(File file[], File checkfile, int children)
 	        throws IOException {
@@ -19,9 +22,18 @@ public class NOC {
 					JavaClass clazz = parser.parse();
 	        
 	        		if(clazz.getSuperclassName().equals(checkfile.getName().replaceFirst("[.][^.]+$", "")) || clazz.getSuperclassName().endsWith("."+checkfile.getName().replaceFirst("[.][^.]+$", ""))) {
-					children++;
+					
+	        			String temp = "Class " + checkfile.getName() + " is the parent of:" + "\n" + file[i].getName();
+	        			nocput.append(temp);
+	    				nocput.append("\n");
+	    				nocput.append("");
+	        			children++;
 	        		}
 			}
+			}
+			
+			if(children > 5) {
+				Output.setnocoutput(nocput.toString());
 			}
 		return children;
 	}
@@ -37,15 +49,24 @@ public class NOC {
         
 		for(int i = 0; i < fil.length; i++) {
 		if(sclazz.getSuperclassName().equals(fil[i].getName().replaceFirst("[.][^.]+$", "")) || sclazz.getSuperclassName().endsWith("."+fil[i].getName().replaceFirst("[.][^.]+$", ""))) {
+			String temp = sclazz.getClassName() + " is the child of ";
 			sin = new FileInputStream(fil[i]);
 			sparser = new ClassParser(sin, fil[i].getName());
 			sclazz = sparser.parse();
 			ldit++;
+			String temp1 = sclazz.getClassName();
+			ditput.append(temp + temp1);
+			ditput.append("\n");
+			ditput.append("");
 			i=-1;
 		}
 		}
 		
 		dit = ldit;
+		
+		if(dit > 5) {
+			Output.setditoutput(ditput.toString());
+		}
 		
 		return dit;
 		

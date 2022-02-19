@@ -1,9 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,7 +31,13 @@ public class DialogWait {
 
 	    Window win = SwingUtilities.getWindowAncestor((AbstractButton) evt.getSource());
 	    dialog = new JDialog(win, msg, JDialog.ModalityType.APPLICATION_MODAL);
+//	    dialog.setUndecorated(true);
 	    dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+//	    dialog.setDefaultLookAndFeelDecorated(true);
+//	    dialog.remove(JDialog.HIDE_ON_CLOSE);
+//	    removeMinMaxClose(win);
+//	    removeMinMaxClose(dialog);
+
 	    
 	    
 	    JProgressBar progressBar = new JProgressBar();
@@ -43,10 +52,29 @@ public class DialogWait {
 	    dialog.add(panel);
 	    dialog.pack();
 	    dialog.setLocationRelativeTo(win);
-	       dialog.setVisible(true);
+	    dialog.setVisible(true);
 	   }
 
 	   public void close() {
 	       dialog.dispose();
+	   }
+	   
+	   public void removeMinMaxClose(Component comp)
+	   {
+	     if(comp instanceof JButton)
+	     {
+	       String accName = ((JButton) comp).getAccessibleContext().getAccessibleName();
+	       System.out.println(accName);
+	       if(accName.equals("Maximize")|| accName.equals("Iconify")||
+	          accName.equals("Close")) comp.getParent().remove(comp);
+	     }
+	     if (comp instanceof Container)
+	     {
+	       Component[] comps = ((Container)comp).getComponents();
+	       for(int x = 0, y = comps.length; x < y; x++)
+	       {
+	         removeMinMaxClose(comps[x]);
+	       }
+	     }
 	   }
 }

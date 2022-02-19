@@ -60,10 +60,10 @@ public class Excel {
 	            row.createCell(4).setCellValue(""+WeMovin.countmultilinecomments(line0.toString()));
 	            row.createCell(5).setCellValue(""+WeMovin.countidentation(listOfFiles[i]));
 	            row.createCell(6).setCellValue(""+WeMovin.cyclomaticcomplexity(line));
-	            row.createCell(7).setCellValue(""+CBO.fanout(listofFiles[i], map, listofFiles).get(0));
-	            row.createCell(8).setCellValue(""+CBO.fanout(listofFiles[i], map, listofFiles).get(1));
-	            row.createCell(9).setCellValue(""+CBO.fanout(listofFiles[i], map, listofFiles).get(2));
-	            row.createCell(10).setCellValue(""+CBO.numberofmethods(listofFiles[i]));
+	            row.createCell(7).setCellValue(""+CBO.fanout(listofFiles[i], map, listofFiles, false).get(0));
+	            row.createCell(8).setCellValue(""+CBO.fanout(listofFiles[i], map, listofFiles, false).get(1));
+	            row.createCell(9).setCellValue(""+CBO.fanout(listofFiles[i], map, listofFiles, false).get(2));
+	            row.createCell(10).setCellValue(""+CBO.numberofmethods(listofFiles[i], false));
 	            row.createCell(11).setCellValue(""+Group.loadGroups(listofFiles[i]).size());
 	            row.createCell(12).setCellValue(""+WeMovin.NOC(listOfFiles[i], listOfFiles));
 	            loop++;

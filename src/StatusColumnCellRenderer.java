@@ -66,5 +66,6 @@ public class StatusColumnCellRenderer extends DefaultTableCellRenderer {
 	            }
 	            return this;
 	        }
+			
 	    }
 

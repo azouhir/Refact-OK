@@ -41,74 +41,114 @@ public class Cyclomatic {
 			
 			public boolean visit(SwitchCase node) {				
 				cc++;
-				output.append(node);
-				output.append("\n");
-				output.append("");
 				return true;
 			}
 			
 			public boolean visit(SwitchStatement node) {
 				cc++;
-				output.append(node);
-				output.append("\n");
-				output.append("");
 				return true;
 			}
 			
 			public boolean visit(IfStatement node) {
 				cc++;
-				output.append(node);
-				output.append("\n");
-				output.append("");
 				return true;
 			}
 			
 			public boolean visit(ForStatement node) {
 				cc++;
-				output.append(node);
-				output.append("\n");
-				output.append("");
 				return true;
 			}
 			
 			public boolean visit(WhileStatement node) {
 				cc++;
-				output.append(node);
-				output.append("\n");
-				output.append("");
 				return true;
 			}
 			
 			public boolean visit(CatchClause node) {
 				cc++;
-				output.append(node);
-				output.append("\n");
-				output.append("");
 				return true;
 			}
 			
 			public boolean visit(BreakStatement node) {
 				cc++;
-				output.append(node);
-				output.append("\n");
-				output.append("");
 				return true;
 			}
 			
 			public boolean visit(ThrowStatement node) {
 				cc++;
-				output.append(node);
-				output.append("\n");
-				output.append("");
 				return true;
 			}
 			
 			public boolean visit(DoStatement node) {
 				cc++;
+				return true;
+			}
+
+		});
+		
+		cu.accept(new ASTVisitor() {
+			
+			public boolean visit(SwitchCase node) {				
 				output.append(node);
 				output.append("\n");
 				output.append("");
-				return true;
+				return false;
+			}
+			
+			public boolean visit(SwitchStatement node) {
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return false;
+			}
+			
+			public boolean visit(IfStatement node) {
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return false;
+			}
+			
+			public boolean visit(ForStatement node) {
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return false;
+			}
+			
+			public boolean visit(WhileStatement node) {
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return false;
+			}
+			
+			public boolean visit(CatchClause node) {
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return false;
+			}
+			
+			public boolean visit(BreakStatement node) {
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return false;
+			}
+			
+			public boolean visit(ThrowStatement node) {
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return false;
+			}
+			
+			public boolean visit(DoStatement node) {
+				output.append(node);
+				output.append("\n");
+				output.append("");
+				return false;
 			}
 
 		});

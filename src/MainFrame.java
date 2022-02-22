@@ -264,6 +264,8 @@ public class MainFrame extends JFrame implements ActionListener{
 
 				    	Object[] row = new Object[14];
 						
+				    	Output.trigger();
+				    	
 						model.setRowCount(0);
 						
 						WeMovin wm = new WeMovin();

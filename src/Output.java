@@ -9,6 +9,16 @@ public class Output {
 	static StringBuffer ditoutput = new StringBuffer();
 	static StringBuffer bugoutput = new StringBuffer();
 	
+	public static void trigger() {
+		ccoutput.delete(0, ccoutput.length());
+		fooutput.delete(0, fooutput.length());
+		fioutput.delete(0, fioutput.length());
+		methoutput.delete(0, methoutput.length());
+		nocoutput.delete(0, nocoutput.length());
+		ditoutput.delete(0, ditoutput.length());
+		bugoutput.delete(0, bugoutput.length());
+	}
+	
 	public static void setccoutput(String cc) {
 		ccoutput.append(cc);
 		ccoutput.append("\n");

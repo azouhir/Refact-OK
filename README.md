@@ -4,10 +4,10 @@ Final Year Project - Computer Science - Brunel University - Software Metric coll
 ![RefactOK logo](https://user-images.githubusercontent.com/44699188/155251222-d8ec4046-1aa5-4598-bc01-30d6c5cfe055.PNG)
 
 ## Description
-![refactok mainscreen](https://user-images.githubusercontent.com/44699188/155251695-ab72aefc-205e-4141-9014-c454f2d9333d.PNG)
-
 Refact-OK is a tool written in java that will allow you to gather some useful information on your project.
 It is a refactoring tool that collects Software metrics such as: LOC, WMC, DIT, NOC, AVGCC, BUGS, CBO, Fan In, Fan Out, Blank Lines, Single and Multi Line Comments.
+
+![refactok mainscreen](https://user-images.githubusercontent.com/44699188/155251695-ab72aefc-205e-4141-9014-c454f2d9333d.PNG)
 
 ## Instructions
 

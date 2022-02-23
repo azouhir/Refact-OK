@@ -1,17 +1,24 @@
 # Refact-OK
 Final Year Project - Computer Science - Brunel University - Software Metric collection tool
 
+![RefactOK logo](https://user-images.githubusercontent.com/44699188/155251222-d8ec4046-1aa5-4598-bc01-30d6c5cfe055.PNG)
+
+## Description
+![refactok mainscreen](https://user-images.githubusercontent.com/44699188/155251695-ab72aefc-205e-4141-9014-c454f2d9333d.PNG)
+
 Refact-OK is a tool written in java that will allow you to gather some useful information on your project.
 It is a refactoring tool that collects Software metrics such as: LOC, WMC, DIT, NOC, AVGCC, BUGS, CBO, Fan In, Fan Out, Blank Lines, Single and Multi Line Comments.
 
+## Instructions
+
 In order for the tool to work correctly you will need to enter the path to your:
 
-SRC: source folder containing all the .java files in your project
-BIN: bin folder containing all the .class files in your project
+SRC: source folder containing all the .java files in your project.
+BIN: bin folder containing all the .class files in your project.
 
 PLEASE ENSURE THE FOLDERS CONTAIN THE SAME FILES! This is crucial for your data collection.
 
-For example is the file "Main.java" is present in src ensure that your bin folder contains "Main.class" and so on.
+For example if the file "Main.java" is present in src ensure that your bin folder contains "Main.class" and so on.
 If your bin folder contains some extra computational classes such as "MainFrame$1" don't worry the tool won't consider those classes.
 
 Below the instructions to work the tool:

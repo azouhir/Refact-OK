@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.stream.events.Characters;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class WeMovin {
@@ -198,6 +199,56 @@ public class WeMovin {
 				System.out.println("bye bye!");
 			}
 		}
+	}
+	
+	public static boolean validFiles(String src, String bin) {
+		
+		try {
+		file2 = new File(src);
+		file3 = new File(bin);
+		
+		javafiles = file2.listFiles();
+		tempclassfiles = file3.listFiles();
+		ArrayList<File> classfiles = new ArrayList<>();
+		String[] srcnames = new String[file2.listFiles().length];
+		
+		boolean noclass = false;
+		boolean nojava = false;
+		
+		for(int i = 0; i < javafiles.length; i++) {
+			srcnames[i] = javafiles[i].getName().replaceFirst("[.][^.]+$", "");
+			
+			if(!FilenameUtils.getExtension(javafiles[i].getName()).equals("java")) {
+				nojava = true;
+			}
+		}
+		
+		for(int j = 0; j < tempclassfiles.length; j++) {
+			if(ArrayUtils.contains(srcnames, tempclassfiles[j].getName().replaceFirst("[.][^.]+$", ""))) {					
+				classfiles.add(tempclassfiles[j]);
+			}
+			
+			if(!FilenameUtils.getExtension(classfiles.get(j).getName()).equals("class")) {
+				noclass = true;
+			}
+		}
+		
+		if(noclass || nojava) {
+			System.out.println("error is here! One of the folders contains non java file");
+			return false;
+		}
+		
+		if(javafiles.length != tempclassfiles.length) {
+			System.out.println("error is here! lenght not equal");
+			return false;	
+		}
+		}
+		catch(Exception e) {
+			System.out.print("error is here! Exception");
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public static void setFiles(String src, String bin) {
@@ -411,7 +462,7 @@ public class WeMovin {
         
         
 		} catch (Exception e) {
-	        e.printStackTrace();
+	        return null;
 	    }
 		
 //		Application.main(null);
@@ -529,9 +580,7 @@ public class WeMovin {
 	}
 	
 	public static int countlines (File file) {
-		
-		int classes = 0;
-		
+		int classes = 0;		
 		try {
 			Scanner scanner = new Scanner(file);
 			while(classes >= 0) {
@@ -547,6 +596,26 @@ public class WeMovin {
 
 		}
 		return classes;
+	}
+	
+	public static int countidentation(File file) {
+		
+		int identation = 0;
+		
+		try {
+		Scanner scanner = new Scanner(file);
+		
+		while(scanner.hasNext()) {
+					final StringBuilder sb = new StringBuilder(scanner.nextLine());
+					while (sb.length() > 0 && Character.isWhitespace(sb.charAt(0))) {
+				        sb.deleteCharAt(0);
+						identation++;
+				}		
+			}
+		}catch(Exception e) {			
+		}
+		
+		return identation;
 	}
 		
 	public static int countmethods (StringBuffer line) {
@@ -618,26 +687,6 @@ public class WeMovin {
         return lline;
 	}
 	
-	public static int countidentation(File file) {
-		
-		int identation = 0;
-		
-		try {
-		Scanner scanner = new Scanner(file);
-		
-		while(scanner.hasNext()) {
-					final StringBuilder sb = new StringBuilder(scanner.nextLine());
-					while (sb.length() > 0 && Character.isWhitespace(sb.charAt(0))) {
-				        sb.deleteCharAt(0);
-						identation++;
-				}		
-			}
-		}catch(Exception e) {			
-		}
-		
-		return identation;
-	}
-	
 	public static int countmultilinecomments(String line) {
 		
 		int mlcomments = 0;
@@ -657,6 +706,23 @@ public class WeMovin {
         }
 		
 		return mlcomments;
+	}
+	
+	public static int countsinglelinecomments (String line) {
+		
+		int comments  = 0;
+		
+		Pattern singlecomments = Pattern.compile("[/][/].*", Pattern.MULTILINE);
+		
+		CharSequence charsequence = line;
+		
+		Matcher scomments = singlecomments.matcher(charsequence);
+		
+		while(scomments.find()) {
+			comments++;
+		}
+		
+		return comments;
 	}
 	
 	public static int NOC (File checkfile, File[] file) {
@@ -712,21 +778,5 @@ public class WeMovin {
 		return blanks;
 	}
 	
-	public static int countsinglelinecomments (String line) {
-		
-		int comments  = 0;
-		
-		Pattern singlecomments = Pattern.compile("[/][/].*", Pattern.MULTILINE);
-		
-		CharSequence charsequence = line;
-		
-		Matcher scomments = singlecomments.matcher(charsequence);
-		
-		while(scomments.find()) {
-			comments++;
-		}
-		
-		return comments;
-	}
 }
 

@@ -25,6 +25,7 @@ OK, let's define a class to represent a group of fields and methods:
 
 public class Group {
 
+	static StringBuffer lcomut = new StringBuffer();
 	private final Set<String> fields = new HashSet<>();
     private final Set<String> methods = new HashSet<>();
     
@@ -94,6 +95,7 @@ Here's the java code to load the groups of the class. LCOM4 is groups.size():
     static List<Group> loadGroups(File file) throws IOException {
         
     	int i = 0;
+    	lcomut = new StringBuffer();
     	
     	try (InputStream in = new FileInputStream(file)) {
             ClassParser parser = new ClassParser(in, file.getName());
@@ -139,6 +141,15 @@ Here's the java code to load the groups of the class. LCOM4 is groups.size():
             }
 //           System.out.println(groups.size());
     //       System.out.println(groups);
+            
+            if(groups.size() > 1) {
+            	for(int j = 0; j < groups.size(); j++) {
+            		lcomut.append("");
+            		lcomut.append(groups.get(i).toString());
+            		lcomut.append("\n");
+            	}           	
+            	Output.setlcomoutput(lcomut.toString());
+            }
             
             return groups;
         }

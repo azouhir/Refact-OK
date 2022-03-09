@@ -81,7 +81,14 @@ public class Excel {
 	        }
 	    }
 	    
-	    
+	    public static boolean validateExcel(JTable table) {
+	    	
+	    	if(table.getRowCount() <= 0) {
+	    		return false;
+	    	}
+	    	
+	    	return true;
+	    }
 	    
 	    public static void CreateFile2(JTable table) {
 	    	

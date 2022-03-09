@@ -31,14 +31,7 @@ public class DialogWait {
 
 	    Window win = SwingUtilities.getWindowAncestor((AbstractButton) evt.getSource());
 	    dialog = new JDialog(win, msg, JDialog.ModalityType.APPLICATION_MODAL);
-//	    dialog.setUndecorated(true);
-	    dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-//	    dialog.setDefaultLookAndFeelDecorated(true);
-//	    dialog.remove(JDialog.HIDE_ON_CLOSE);
-//	    removeMinMaxClose(win);
-//	    removeMinMaxClose(dialog);
-
-	    
+	    dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); 
 	    
 	    JProgressBar progressBar = new JProgressBar();
 	    progressBar.setIndeterminate(true);

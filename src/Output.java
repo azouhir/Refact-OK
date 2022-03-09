@@ -8,6 +8,7 @@ public class Output {
 	static StringBuffer nocoutput = new StringBuffer();
 	static StringBuffer ditoutput = new StringBuffer();
 	static StringBuffer bugoutput = new StringBuffer();
+	static StringBuffer lcomoutput = new StringBuffer();
 	
 	public static void trigger() {
 		ccoutput.delete(0, ccoutput.length());
@@ -17,6 +18,17 @@ public class Output {
 		nocoutput.delete(0, nocoutput.length());
 		ditoutput.delete(0, ditoutput.length());
 		bugoutput.delete(0, bugoutput.length());
+		lcomoutput.delete(0, lcomoutput.length());
+	}
+	
+	public static void setlcomoutput(String lcom) {
+		lcomoutput.append(lcom);
+		lcomoutput.append("\n");
+		lcomoutput.append("");
+	}
+	
+	public static String getlcomoutput() {		
+		return lcomoutput.toString();
 	}
 	
 	public static void setccoutput(String cc) {

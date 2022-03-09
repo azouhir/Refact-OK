@@ -83,8 +83,7 @@ public class CBO {
 						fanout++;
 					}
 				}
-			}
-	        	        
+			}        	        
 			for(int y = 0; y < fil.length; y++) {
 				Map<String,Set <String>> map = new HashMap<String, Set<String>>();
 				if(fanin(file,fil[y],map) > fanin) {

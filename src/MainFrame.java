@@ -22,6 +22,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.geometry.Point;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -188,7 +189,9 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		//CREATE TABLE TO DISPLAY DATA
 				table = new JTable();
-				Object[] columns = {"Class", "LOC", "Blank Lines", "Single Line Comments", "Multi Line Comments", "Identation Count", "AVGCC", "Fan In", "Fan Out", "CBO", "WMC", "LCOM4", "NOC", "DIT", "BUGS"};
+				Object[] columns = {"Class", "LOC", "Blank Lines", "Single Line Comments", 
+						"Multi Line Comments", "Identation Count", "AVGCC", "Fan In", "Fan Out", 
+						"CBO", "WMC", "LCOM4", "NOC", "DIT", "BUGS"};
 				
 				DefaultTableModel model = new DefaultTableModel();
 				model.setColumnIdentifiers(columns);
@@ -208,6 +211,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		bugs.setFont(new Font(null, Font.PLAIN, 10));
 		bugs.setAlignmentX(JTextPane.CENTER_ALIGNMENT);
 		bugs.setAlignmentY(JTextPane.CENTER_ALIGNMENT);
+		
+		
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.decode("#57596D"));
 		table.setBackground(Color.decode("#57596D"));
@@ -255,6 +260,24 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
+				if(srctextpane.getText().toCharArray().length >= 120 || bintextpane.getText().toCharArray().length >= 120) {
+					JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+					        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if(srctextpane.getText().isEmpty() || bintextpane.getText().isEmpty() || StringUtils.isBlank(srctextpane.getText()) || StringUtils.isBlank(bintextpane.getText())) {
+					JOptionPane.showMessageDialog(new JFrame(), "Error: Folder Paths Missing! Enter folder paths", "Error",
+					        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if(!WeMovin.validFiles(srctextpane.getText(), bintextpane.getText())) {
+					JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong folder selected! One of your folders containg wrong files", "Error",
+					        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				DialogWait wait = new DialogWait();
 
 				SwingWorker<Void, Void> mySwingWorker = new SwingWorker<Void, Void>() {
@@ -273,20 +296,26 @@ public class MainFrame extends JFrame implements ActionListener{
 						
 						try {
 							row = wm.BuildTable(model);
-						} catch (InterruptedException | IOException e) {
-							e.printStackTrace();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(new JFrame(), "Error: Ops something went wrong! Check the folders you selected", "Error",
+							        JOptionPane.ERROR_MESSAGE);
+							
+							wait.close();
+							return null;
+						}		
+						
+						if(row == null) {
+							JOptionPane.showMessageDialog(new JFrame(), "Error: Ops something went wrong! Check the folders you selected", "Error",
+							        JOptionPane.ERROR_MESSAGE);
+							return null;
 						}
-						
-						
 						
 						for(int i = 1; i < table.getColumnCount();i++) {
 							table.getColumnModel().getColumn(i).setCellRenderer(new StatusColumnCellRenderer());
 						}
 						
 						table.repaint();
-						table.setColumnSelectionAllowed(true);
-						
-						
+						table.setColumnSelectionAllowed(true);	
 						
 				        wait.close();
 				        return null;
@@ -297,6 +326,7 @@ public class MainFrame extends JFrame implements ActionListener{
 				wait.makeWait("Analysing", arg0);
 
 				bugs.setText("Select 2 columns and click to get correlation!");
+				
 			}
 		});
 		
@@ -308,6 +338,24 @@ public class MainFrame extends JFrame implements ActionListener{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				if(table.getSelectedColumnCount() == 1) {
+					JOptionPane.showMessageDialog(new JFrame(), "Error: Missing Column! Only one column selected, select another one", "Error",
+					        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if(table.getSelectedColumnCount() <= 0) {
+					JOptionPane.showMessageDialog(new JFrame(), "Error: Missing Columns! No columns selected, select two columns", "Error",
+					        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if(table.getSelectedColumn() == 0) {
+					JOptionPane.showMessageDialog(new JFrame(), "Error: String column! You can't calculate correlation between String and int, select another column", "Error",
+					        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				
 				panel.removeAll();
 				XYSeriesCollection dataset = new XYSeriesCollection();
@@ -393,6 +441,12 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				WeMovin wm = new WeMovin();
+				if(!Excel.validateExcel(table)) {
+					
+					JOptionPane.showMessageDialog(new JFrame(), "Error: Table is empty! Analyse files before generating file", "Error",
+					        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				Excel.CreateFile2(table);
 			}	
 		});
@@ -642,7 +696,37 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(LOCcheckbox.isSelected()){
+					
+					if(LOCtextfield.getText().toCharArray().length >= 120) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						lines = 0;
+						LOCtextfield.setText("LOC"); 
+						LOCcheckbox.setSelected(false);
+						return;
+					}
+					
+					if(LOCtextfield.getText().equals(null) || LOCtextfield.getText().isEmpty() || StringUtils.isBlank(LOCtextfield.getText()) || LOCtextfield.getText().equals("LOC")) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						lines = 0;
+						LOCtextfield.setText("LOC"); 
+						LOCcheckbox.setSelected(false);
+						return;
+					}
+					
+					try {
 					lines = Integer.parseInt(LOCtextfield.getText());
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						lines = 0;
+						LOCtextfield.setText("LOC"); 
+						LOCcheckbox.setSelected(false);
+						return;
+					}
+					
 					LOCtextfield.setEditable(false);
 					LOCtextfield.setBackground(Color.decode("#58D9FF"));
 					LOCtextfield.setForeground(Color.decode("#57596D"));
@@ -664,7 +748,36 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(WMCcheckbox.isSelected()){
-					methods = Integer.parseInt(WMCtextfield.getText());
+					if(WMCtextfield.getText().toCharArray().length >= 120) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						methods = 0;
+						WMCtextfield.setText("WMC"); 
+						WMCcheckbox.setSelected(false);
+						return;
+					}
+					
+					if(WMCtextfield.getText().equals(null) || WMCtextfield.getText().isEmpty() || StringUtils.isBlank(WMCtextfield.getText()) || WMCtextfield.getText().equals("WMC")) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						methods = 0;
+						WMCtextfield.setText("WMC"); 
+						WMCcheckbox.setSelected(false);
+						return;
+					}
+					
+					try {
+						methods = Integer.parseInt(WMCtextfield.getText());
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						methods = 0;
+						WMCtextfield.setText("WMC"); 
+						WMCcheckbox.setSelected(false);
+						return;
+					}
+					
 					WMCtextfield.setEditable(false);
 					WMCtextfield.setBackground(Color.decode("#58D9FF"));
 					WMCtextfield.setForeground(Color.decode("#57596D"));
@@ -686,7 +799,36 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(CBOcheckbox.isSelected()){
-					cbo = Integer.parseInt(CBOtextfield.getText());
+					if(CBOtextfield.getText().toCharArray().length >= 120) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						cbo = 0;
+						CBOtextfield.setText("CBO"); 
+						CBOcheckbox.setSelected(false);
+						return;
+					}
+					
+					if(CBOtextfield.getText().equals(null) || CBOtextfield.getText().isEmpty() || StringUtils.isBlank(CBOtextfield.getText()) || CBOtextfield.getText().equals("CBO")) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						cbo = 0;
+						CBOtextfield.setText("CBO"); 
+						CBOcheckbox.setSelected(false);
+						return;
+					}
+					
+					try {
+						cbo = Integer.parseInt(CBOtextfield.getText());
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						cbo = 0;
+						CBOtextfield.setText("CBO"); 
+						CBOcheckbox.setSelected(false);
+						return;
+					}
+					
 					CBOtextfield.setEditable(false);
 					CBOtextfield.setBackground(Color.decode("#58D9FF"));
 					CBOtextfield.setForeground(Color.decode("#57596D"));
@@ -708,7 +850,37 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(LCOMcheckbox.isSelected()){
-					lcom = Integer.parseInt(LCOMtextfield.getText());
+					
+						if(LCOMtextfield.getText().toCharArray().length >= 120) {
+							JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+							        JOptionPane.ERROR_MESSAGE);
+							lcom = 0;
+							LCOMtextfield.setText("LCOM"); 
+							LCOMcheckbox.setSelected(false);
+							return;
+						}
+						
+						if(LCOMtextfield.getText().equals(null) || LCOMtextfield.getText().isEmpty() || StringUtils.isBlank(LCOMtextfield.getText()) || LCOMtextfield.getText().equals("LCOM")) {
+							JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+							        JOptionPane.ERROR_MESSAGE);
+							lcom = 0;
+							LCOMtextfield.setText("LCOM"); 
+							LCOMcheckbox.setSelected(false);
+							return;
+						}
+						
+						try {
+							lcom = Integer.parseInt(LCOMtextfield.getText());
+						}
+						catch(Exception ex) {
+							JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+							        JOptionPane.ERROR_MESSAGE);
+							lcom = 0;
+							LCOMtextfield.setText("LCOM"); 
+							LCOMcheckbox.setSelected(false);
+							return;
+						}
+					
 					LCOMtextfield.setEditable(false);
 					LCOMtextfield.setBackground(Color.decode("#58D9FF"));
 					LCOMtextfield.setForeground(Color.decode("#57596D"));
@@ -730,7 +902,37 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(AVGCCcheckbox.isSelected()){
-					avgcc = Integer.parseInt(AVGCCtextfield.getText());
+					
+					if(AVGCCtextfield.getText().toCharArray().length >= 120) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						avgcc = 0;
+						AVGCCtextfield.setText("AVGCC"); 
+						AVGCCcheckbox.setSelected(false);
+						return;
+					}
+					
+					if(AVGCCtextfield.getText().equals(null) || AVGCCtextfield.getText().isEmpty() || StringUtils.isBlank(AVGCCtextfield.getText()) || AVGCCtextfield.getText().equals("AVGCC")) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						avgcc = 0;
+						AVGCCtextfield.setText("AVGCC"); 
+						AVGCCcheckbox.setSelected(false);
+						return;
+					}
+					
+					try {
+						avgcc = Integer.parseInt(AVGCCtextfield.getText());
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						avgcc = 0;
+						AVGCCtextfield.setText("AVGCC"); 
+						AVGCCcheckbox.setSelected(false);
+						return;
+					}
+					
 					AVGCCtextfield.setEditable(false);
 					AVGCCtextfield.setBackground(Color.decode("#58D9FF"));
 					AVGCCtextfield.setForeground(Color.decode("#57596D"));
@@ -752,7 +954,37 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(FanIncheckbox.isSelected()){
-					fanin = Integer.parseInt(FanIntextfield.getText());
+					
+					if(FanIntextfield.getText().toCharArray().length >= 120) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						fanin = 0;
+						FanIntextfield.setText("Fan In"); 
+						FanIncheckbox.setSelected(false);
+						return;
+					}
+					
+					if(FanIntextfield.getText().equals(null) || FanIntextfield.getText().isEmpty() || StringUtils.isBlank(FanIntextfield.getText()) || FanIntextfield.getText().equals("Fan In")) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						fanin = 0;
+						FanIntextfield.setText("Fan In"); 
+						FanIncheckbox.setSelected(false);
+						return;
+					}
+					
+					try {
+						fanin = Integer.parseInt(FanIntextfield.getText());
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						fanin = 0;
+						FanIntextfield.setText("Fan In"); 
+						FanIncheckbox.setSelected(false);
+						return;
+					}
+					
 					FanIntextfield.setEditable(false);
 					FanIntextfield.setBackground(Color.decode("#58D9FF"));
 					FanIntextfield.setForeground(Color.decode("#57596D"));
@@ -774,7 +1006,37 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(FanOutcheckbox.isSelected()){
-					fanout = Integer.parseInt(FanOutfieldtext.getText());
+					
+					if(FanOutfieldtext.getText().toCharArray().length >= 120) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						fanout = 0;
+						FanOutfieldtext.setText("Fan Out"); 
+						FanOutcheckbox.setSelected(false);
+						return;
+					}
+					
+					if(FanOutfieldtext.getText().equals(null) || FanOutfieldtext.getText().isEmpty() || StringUtils.isBlank(FanOutfieldtext.getText()) || FanOutfieldtext.getText().equals("Fan Out")) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						fanout = 0;
+						FanOutfieldtext.setText("Fan Out"); 
+						FanOutcheckbox.setSelected(false);
+						return;
+					}
+					
+					try {
+						fanout = Integer.parseInt(FanOutfieldtext.getText());
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						fanout = 0;
+						FanOutfieldtext.setText("Fan Out"); 
+						FanOutcheckbox.setSelected(false);
+						return;
+					}
+					
 					FanOutfieldtext.setEditable(false);
 					FanOutfieldtext.setBackground(Color.decode("#58D9FF"));
 					FanOutfieldtext.setForeground(Color.decode("#57596D"));
@@ -797,7 +1059,37 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(NOCcheckbox.isSelected()){
-					noc = Integer.parseInt(NOCtextfield.getText());
+					
+					if(NOCtextfield.getText().toCharArray().length >= 120) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						noc = 0;
+						NOCtextfield.setText("NOC"); 
+						NOCcheckbox.setSelected(false);
+						return;
+					}
+					
+					if(NOCtextfield.getText().equals(null) || NOCtextfield.getText().isEmpty() || StringUtils.isBlank(NOCtextfield.getText()) || NOCtextfield.getText().equals("NOC")) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						noc = 0;
+						NOCtextfield.setText("NOC"); 
+						NOCcheckbox.setSelected(false);
+						return;
+					}
+					
+					try {
+						noc = Integer.parseInt(NOCtextfield.getText());
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						noc = 0;
+						NOCtextfield.setText("NOC"); 
+						NOCcheckbox.setSelected(false);
+						return;
+					}
+					
 					NOCtextfield.setEditable(false);
 					NOCtextfield.setBackground(Color.decode("#58D9FF"));
 					NOCtextfield.setForeground(Color.decode("#57596D"));
@@ -819,7 +1111,37 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(DITcheckbox.isSelected()){
-					dit = Integer.parseInt(DITtextfield.getText());
+					
+					if(DITtextfield.getText().toCharArray().length >= 120) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						dit = 0;
+						DITtextfield.setText("DIT"); 
+						DITcheckbox.setSelected(false);
+						return;
+					}
+					
+					if(DITtextfield.getText().equals(null) || DITtextfield.getText().isEmpty() || StringUtils.isBlank(DITtextfield.getText()) || DITtextfield.getText().equals("DIT")) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						dit = 0;
+						DITtextfield.setText("DIT"); 
+						DITcheckbox.setSelected(false);
+						return;
+					}
+					
+					try {
+						dit = Integer.parseInt(DITtextfield.getText());
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						dit = 0;
+						DITtextfield.setText("DIT"); 
+						DITcheckbox.setSelected(false);
+						return;
+					}
+					
 					DITtextfield.setEditable(false);
 					DITtextfield.setBackground(Color.decode("#58D9FF"));
 					DITtextfield.setForeground(Color.decode("#57596D"));
@@ -841,7 +1163,37 @@ public class MainFrame extends JFrame implements ActionListener{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(BUGScheckbox.isSelected()){
-					bug1 = Integer.parseInt(BUGStextfield.getText());
+					
+					if(BUGStextfield.getText().toCharArray().length >= 120) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						bug1 = 0;
+						BUGStextfield.setText("BUGS"); 
+						BUGScheckbox.setSelected(false);
+						return;
+					}
+					
+					if(BUGStextfield.getText().equals(null) || BUGStextfield.getText().isEmpty() || StringUtils.isBlank(BUGStextfield.getText()) || BUGStextfield.getText().equals("BUGS")) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						bug1 = 0;
+						BUGStextfield.setText("BUGS"); 
+						BUGScheckbox.setSelected(false);
+						return;
+					}
+					
+					try {
+						bug1 = Integer.parseInt(BUGStextfield.getText());
+					}
+					catch(Exception ex) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
+						        JOptionPane.ERROR_MESSAGE);
+						bug1 = 0;
+						BUGStextfield.setText("BUGS"); 
+						BUGScheckbox.setSelected(false);
+						return;
+					}
+					
 					BUGStextfield.setEditable(false);
 					BUGStextfield.setBackground(Color.decode("#58D9FF"));
 					BUGStextfield.setForeground(Color.decode("#57596D"));
@@ -1088,7 +1440,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	    				  classnames.add(table.getValueAt(i, 0).toString());
 	    			  }
 	    		  }
-	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have bad cohesion, this can mean that some methods are not needed in these classes"+"\n"+"If the value is 0: It means the cohesion is low and bad"+"\n"+"If the value is 2: It means that the number of attributes are higher than the methods in the class");
+	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have bad cohesion, this can mean that some methods are not needed in these classes"+"\n"+"If the value is 0: It means the cohesion is low and bad"+"\n"+"If the value is 2: It means that the number of attributes are higher than the methods in the class"+"\n"+Output.getlcomoutput());
 	    	  }
 	    	  else if (colindex == 12) {
 	    		  for(int i = 0; i < table.getRowCount(); i++) {

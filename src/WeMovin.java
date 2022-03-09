@@ -226,9 +226,11 @@ public class WeMovin {
 		for(int j = 0; j < tempclassfiles.length; j++) {
 			if(ArrayUtils.contains(srcnames, tempclassfiles[j].getName().replaceFirst("[.][^.]+$", ""))) {					
 				classfiles.add(tempclassfiles[j]);
-			}
-			
-			if(!FilenameUtils.getExtension(classfiles.get(j).getName()).equals("class")) {
+			}	
+		}
+		
+		for(int i = 0; i < classfiles.size(); i++) {
+			if(!FilenameUtils.getExtension(classfiles.get(i).getName()).equals("class")) {
 				noclass = true;
 			}
 		}
@@ -238,13 +240,14 @@ public class WeMovin {
 			return false;
 		}
 		
-		if(javafiles.length != tempclassfiles.length) {
+		if(javafiles.length != classfiles.size()) {
 			System.out.println("error is here! lenght not equal");
 			return false;	
 		}
 		}
 		catch(Exception e) {
-			System.out.print("error is here! Exception");
+			System.out.println("error is here! Exception");
+			System.out.println(e);
 			return false;
 		}
 		

@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 public class Application {
 	
-	private static final String FINDSECBUGS_JAR_PATH = "C:\\Users\\anasz\\Downloads\\FindSec\\findsecbugs-plugin-1.9.0.jar";
+//	private static final String FINDSECBUGS_JAR_PATH = "C:\\Users\\anasz\\Downloads\\FindSec\\findsecbugs-plugin-1.9.0.jar";
 //	private static final String TARGET_DIR_PATH = WeMovin.Bin();
 	private static String TARGET_DIR_PATH;
 	StringBuffer repo = new StringBuffer();
@@ -35,7 +35,7 @@ public class Application {
 		
 		repo = new StringBuffer();
 		
-		addPlugin();
+//		addPlugin();
 		setupFiles(project);
 		
 		BugCollection bugs = new SortedBugCollection();
@@ -71,7 +71,7 @@ public class Application {
 		
 	}
 	
-	private void addPlugin() {
+/*	private void addPlugin() {
 		try {
 			Path pluginPath = Paths.get(FINDSECBUGS_JAR_PATH);
 			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
@@ -81,7 +81,7 @@ public class Application {
 			System.err.println("Could not add plugin " + e.getMessage());
 		}
 	}
-
+*/
 	/*
 	private void setupFiles(Project project) {
 		project.addFile(TARGET_DIR_PATH);

@@ -300,7 +300,7 @@ public class MainFrame extends JFrame implements ActionListener{
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(new JFrame(), "Error: Ops something went wrong! Check the folders you selected", "Error",
 							        JOptionPane.ERROR_MESSAGE);
-							
+							System.out.println(e);
 							wait.close();
 							return null;
 						}		

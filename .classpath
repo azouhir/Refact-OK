@@ -13,7 +13,6 @@
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/poi-bin-5.1.0/lib/commons-collections4-4.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/poi-bin-5.1.0/lib/commons-math3-3.6.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/poi-bin-5.1.0/lib/SparseBitSet-1.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/spotbugs-4.5.3/spotbugs-4.5.3/lib/spotbugs.jar"/>
 	<classpathentry kind="lib" path="jgoodies-forms-1.8.0.jar" sourcepath="jgoodies-forms-1.8.0-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/jfreechart-1.0.19/lib/jcommon-1.0.23.jar"/>
@@ -32,5 +31,6 @@
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/jdt/org.eclipse.osgi-3.17.100.jar"/>
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/jdt/org.eclipse.text-3.12.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/spotbugs-4.6.0/spotbugs-4.6.0/lib/spotbugs.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

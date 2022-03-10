@@ -31,5 +31,6 @@
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/jdt/org.eclipse.jdt.core-3.14.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/jdt/org.eclipse.osgi-3.17.100.jar"/>
 	<classpathentry kind="lib" path="C:/Users/anasz/Downloads/jdt/org.eclipse.text-3.12.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

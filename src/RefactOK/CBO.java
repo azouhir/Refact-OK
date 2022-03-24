@@ -19,12 +19,15 @@ import java.util.regex.Pattern;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldInstruction;
 import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.*;
 
 public class CBO {
 	
@@ -101,7 +104,7 @@ public class CBO {
 	                System.out.println(refMap);
 	            }
 	        }	        */
-	        refMap.put(className, referees); 
+			refMap.put(className, referees); 
 	    }
 		
 		int tot = fanin + fanout;
@@ -123,26 +126,32 @@ public class CBO {
         return CBO;
 	}
 
-	public static int numberofmethods(File file, boolean produce) throws IOException{
+	public static int numberofmethods(File file, boolean produce) throws IOException, ClassNotFoundException{
 		
 		meth = new StringBuffer();
-		int count = -1;
-		
+		int count = 0;
 		try (InputStream in = new FileInputStream(file)) {
 		
 			meth.append(file.getName());
 			ClassParser parser = new ClassParser(in, file.getName());
-			JavaClass clazz = parser.parse();
-			for (org.apache.bcel.classfile.Method method: clazz.getMethods()) {
+			JavaClass clazz1 = parser.parse();
+			ClassGen cg = new ClassGen(clazz1);
+			ConstantPoolGen cp = new ConstantPoolGen(clazz1.getConstantPool());
+			for (org.apache.bcel.classfile.Method method: clazz1.getMethods()) {
+				MethodGen methodgen = new MethodGen(method, clazz1.getClassName(), cp);
+				if(!methodgen.getName().matches("<init>|<clinit>")) {
+				ConstantPoolGen methgen = new ConstantPoolGen(method.getConstantPool());
 				Code code = method.getCode();
 				String temp = method.getName();
+				System.out.println(methodgen.getType());
 				meth.append(temp);
 				meth.append("\n");
 				meth.append("");
 				count++;
-			} 
+				}
+			}			
 		} 
-		
+
 		if(produce && count > 15) {
 			Output.setmethoutput(meth.toString());
 		}

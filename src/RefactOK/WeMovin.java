@@ -35,7 +35,7 @@ public class WeMovin {
 	static int fanout = 0;
 	static int lcom = 0;
 	static int noc = 0;
-	static int avgcc = 0;
+	static double avgcc = 0.0;
 	static int mlcomments = 0;
 	static int dit = 0;
 	static int bug1 = 0;
@@ -79,8 +79,9 @@ public class WeMovin {
 	public static void SetNOC(int n) {
 		noc = n;
 	}
-	public static void SetAVGCC(int a) {
+	public static void SetAVGCC(double a) {
 		avgcc = a;
+		System.out.println("In WeMovin is: "+avgcc);
 	}
 	public static void SetDIT(int d) {
 		dit = d;
@@ -412,7 +413,8 @@ public class WeMovin {
         		int seven = (int) CBO.fanout(listofFiles[i], map, listofFiles, false).get(0);
         		int eight = (int) CBO.fanout(listofFiles[i], map, listofFiles, false).get(1);
         		int nine = (int) CBO.fanout(listofFiles[i], map, listofFiles, true).get(2);
-        		int ten = CBO.numberofmethods(listofFiles[i], true);
+//        		int ten = CBO.numberofmethods(listofFiles[i], true);
+        		int ten = Cyclomatic.wmc(line0.toString(), listOfFiles[i].getName(), true);
         		int eleven = Group.loadGroups(listofFiles[i]).size();
         		int twelve = NOC.noc(listofFiles,listofFiles[i],0);
         		int thirteen = NOC.DIT(listofFiles[i], 0, listofFiles);
@@ -422,7 +424,7 @@ public class WeMovin {
         		int fourteen = bugs;
         		
         		if(one >= lines) {
-        			if(six >= avgcc) {
+        			if(six/ten >= avgcc) {
         				if(seven >= fanin) {
         					if(eight >= fanout) {
         						if(nine >= cbo) {
@@ -431,6 +433,9 @@ public class WeMovin {
         									if(twelve >= noc) {
         										if(thirteen >= dit) {
         											if(fourteen >= bug1) {
+        												
+        												System.out.println("I am the value collected: "+ six);
+        												System.out.println("And I am the avgcc threshold: "+ avgcc);
         												
 //        												double sixteen = six/ ten;
         												row[0] = zero;
@@ -551,7 +556,7 @@ public class WeMovin {
 		    return cov / sigmax / sigmay;
 		  }
 	
-	public static void Printing (String line0, StringBuffer line, File file, File file2, File[] file3, File[] file4) throws IOException {
+	public static void Printing (String line0, StringBuffer line, File file, File file2, File[] file3, File[] file4) throws IOException, ClassNotFoundException {
 
 		Map<String,Set <String>> map = new HashMap<String, Set<String>>();
 		

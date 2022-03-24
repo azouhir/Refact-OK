@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -57,6 +58,8 @@ import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -113,7 +116,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private static int fanout;
 	private static int lcom;
 	private static int noc;
-	private static int avgcc;
+	private static double avgcc;
 	private static int dit;
 	private static int bug1;
 	private static String coly;
@@ -125,8 +128,15 @@ public class MainFrame extends JFrame implements ActionListener{
 	private int[] Yi;
 	private JTable table;
 	private JTextArea instructions;
+	private String mainbackgroundcolour = "#feeafa";
+	private String textcolour = "#11151c";
+	private String componentsbgcolour = "#efd3d7";
+	private String bordercolour = "#11151c";
+	private String buttoncolours = "#cbc0d3";
+	private String buttontext = "#11151c";
+	private String selected = "#d66853";
+	private String selectedtxtcolour = "#FFFFFF";
 
-	
 	// Launch the application. 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -164,29 +174,33 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		btnbinfolder = new JButton("Chose the 'bin' folder of your project");
 		btnbinfolder.addActionListener(this);
-		btnbinfolder.setBackground(Color.decode("#57596D"));
-		btnbinfolder.setForeground(Color.decode("#58D9FF"));
-		btnbinfolder.setBorder(new LineBorder(Color.decode("#58D9FF")));
+		btnbinfolder.setBackground(Color.decode(componentsbgcolour));
+		btnbinfolder.setForeground(Color.decode(textcolour));
+///		btnbinfolder.setBorder(new LineBorder(Color.decode(bordercolour)));
+		btnbinfolder.setBorder(BorderFactory.createLineBorder(Color.decode(bordercolour), 4));
+//		btnbinfolder.setBackground(Color.decode(componentsbgcolour));
+//		btnbinfolder.setBorder(new MatteBorder (0,0,2,0, Color.decode(bordercolour)));
 		btnbinfolder.setOpaque(true);
 		btnbinfolder.setBorderPainted(false);
+//		btnbinfolder.setContentAreaFilled(true);
 		
 		btnsrcfolder = new JButton("Chose the 'source' folder of your project");
 		btnsrcfolder.addActionListener(this);
-		btnsrcfolder.setBackground(Color.decode("#57596D"));
-		btnsrcfolder.setForeground(Color.decode("#58D9FF"));
-		btnsrcfolder.setBorder(new LineBorder(Color.decode("#58D9FF")));
+		btnsrcfolder.setBackground(Color.decode(componentsbgcolour));
+		btnsrcfolder.setForeground(Color.decode(textcolour));
+		btnsrcfolder.setBorder(new LineBorder(Color.decode(bordercolour)));
 		btnsrcfolder.setOpaque(true);
 		btnsrcfolder.setBorderPainted(false);
 		
 		bintextpane = new JTextPane();
-		bintextpane.setBackground(Color.decode("#57596D"));
-		bintextpane.setForeground(Color.decode("#58D9FF"));
-		bintextpane.setBorder(new LineBorder(Color.decode("#58D9FF")));
+		bintextpane.setBackground(Color.decode(componentsbgcolour));
+		bintextpane.setForeground(Color.decode(textcolour));
+		bintextpane.setBorder(new LineBorder(Color.decode(bordercolour)));
 		
 		srctextpane = new JTextPane();
-		srctextpane.setBackground(Color.decode("#57596D"));
-		srctextpane.setForeground(Color.decode("#58D9FF"));
-		srctextpane.setBorder(new LineBorder(Color.decode("#58D9FF")));
+		srctextpane.setBackground(Color.decode(componentsbgcolour));
+		srctextpane.setForeground(Color.decode(textcolour));
+		srctextpane.setBorder(new LineBorder(Color.decode(bordercolour)));
 		
 		//CREATE TABLE TO DISPLAY DATA
 				table = new JTable();
@@ -204,9 +218,9 @@ public class MainFrame extends JFrame implements ActionListener{
 				
 		
 		JTextPane bugs = new JTextPane();
-		bugs.setBackground(Color.decode("#57596D"));
-		bugs.setForeground(Color.decode("#58D9FF"));
-		bugs.setBorder(new LineBorder(Color.decode("#58D9FF")));
+		bugs.setBackground(Color.decode(componentsbgcolour));
+		bugs.setForeground(Color.decode(textcolour));
+		bugs.setBorder(new LineBorder(Color.decode(bordercolour)));
 		
 		bugs.setEditable(false);
 		bugs.setFont(new Font(null, Font.PLAIN, 10));
@@ -215,11 +229,12 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.getViewport().setBackground(Color.decode("#57596D"));
-		table.setBackground(Color.decode("#57596D"));
-		table.setForeground(Color.decode("#58D9FF"));
-		table.getTableHeader().setBackground(Color.decode("#57596D"));
-		table.getTableHeader().setForeground(Color.decode("#58D9FF"));
+		scrollPane.setBorder(new LineBorder(Color.decode(bordercolour)));
+		scrollPane.getViewport().setBackground(Color.decode(componentsbgcolour));
+		table.setBackground(Color.decode(componentsbgcolour));
+		table.setForeground(Color.decode(textcolour));
+		table.getTableHeader().setBackground(Color.decode(componentsbgcolour));
+		table.getTableHeader().setForeground(Color.decode(textcolour));
 		table.getTableHeader().setOpaque(false);
 		
 		instructions = new JTextArea();
@@ -240,9 +255,9 @@ public class MainFrame extends JFrame implements ActionListener{
 							"Multi line comments = returns number of multi line comments in the class /**/");
 		
 
-		instructions.setBackground(Color.decode("#57596D"));
-		instructions.setForeground(Color.decode("#58D9FF"));
-		Font font = new Font("Dialog", Font.PLAIN, 8);
+		instructions.setBackground(Color.decode(componentsbgcolour));
+		instructions.setForeground(Color.decode(textcolour));
+		Font font = new Font("Dialog", Font.PLAIN, 10);
 		instructions.setFont(font);
 		
 		scrollPane_1 = new JScrollPane();
@@ -252,8 +267,34 @@ public class MainFrame extends JFrame implements ActionListener{
 		scrollPane_1.setHorizontalScrollBarPolicy(scrollPane_1.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane_1.setVerticalScrollBarPolicy(scrollPane_1.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
+		JButton metricsinfo = new JButton("info");
+		metricsinfo.setContentAreaFilled(false);
+		metricsinfo.setForeground(Color.decode(textcolour));
+		metricsinfo.setBorder(new MatteBorder (2,2,2,2, Color.decode(bordercolour)));
+		metricsinfo.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "enter a value in any one of the text fields! Enter any number you wish \n "
+						+ "[  ][100      ]         [  ][5.5          ] \n "
+						+ "[  ][WMC   ]         [  ][Fan In     ] \n "
+						+ "[  ][CBO     ]         [  ][Fan Out  ] \n "
+						+ "[  ][LCOM  ]         [  ][NOC       ] \n "
+						+ "[  ][DIT      ]         [  ][10           ] \n "
+						+ " \n"
+						+ "Once done tick the checkbox on the left hand side to lock the value in [v]! for example: \n "
+						+ "[V][100      ]         [V][5.5          ] \n "
+						+ "[  ][WMC   ]         [  ][Fan In     ] \n "
+						+ "[  ][CBO     ]         [  ][Fan Out  ] \n "
+						+ "[  ][LCOM  ]         [  ][NOC       ] \n "
+						+ "[  ][DIT      ]         [V][10           ] ", "How to enter a threshold", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+		});
+		
 		btnanalyser = new JButton("Analyse");
-		btnanalyser.setBackground(Color.decode("#58D9FF"));
+		btnanalyser.setBackground(Color.decode(buttoncolours));
+		btnanalyser.setForeground(Color.decode(buttontext));
 		btnanalyser.setOpaque(true);
 		btnanalyser.setBorderPainted(false);
 		btnanalyser.addActionListener(new ActionListener() {		
@@ -332,7 +373,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		});
 		
 		btncorrel = new JButton("Correlation");
-		btncorrel.setBackground(Color.decode("#58D9FF"));
+		btncorrel.setBackground(Color.decode(buttoncolours));
+		btncorrel.setForeground(Color.decode(buttontext));
 		btncorrel.setOpaque(true);
 		btncorrel.setBorderPainted(false);
 		btncorrel.addActionListener(new ActionListener() {
@@ -432,9 +474,9 @@ public class MainFrame extends JFrame implements ActionListener{
 		});
 		
 		btnexcelfile = new JButton("Generate Excel");
-		btnexcelfile.setBackground(Color.decode("#57596D"));
-		btnexcelfile.setForeground(Color.decode("#58D9FF"));
-		btnexcelfile.setBorder(new LineBorder(Color.decode("#58D9FF")));
+		btnexcelfile.setBackground(Color.decode(componentsbgcolour));
+		btnexcelfile.setForeground(Color.decode(textcolour));
+		btnexcelfile.setBorder(new LineBorder(Color.decode(bordercolour)));
 		btnexcelfile.setOpaque(true);
 		btnexcelfile.setBorderPainted(false);
 		btnexcelfile.addActionListener(new ActionListener() {
@@ -453,41 +495,42 @@ public class MainFrame extends JFrame implements ActionListener{
 		});
 		
 		LOCcheckbox = new JCheckBox();
-		LOCcheckbox.setBackground(Color.decode("#1B1D38"));
+		LOCcheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		WMCcheckbox = new JCheckBox();
-		WMCcheckbox.setBackground(Color.decode("#1B1D38"));
+		WMCcheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		CBOcheckbox = new JCheckBox();
-		CBOcheckbox.setBackground(Color.decode("#1B1D38"));
+		CBOcheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		LCOMcheckbox = new JCheckBox();
-		LCOMcheckbox.setBackground(Color.decode("#1B1D38"));
+		LCOMcheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		AVGCCcheckbox = new JCheckBox();
-		AVGCCcheckbox.setBackground(Color.decode("#1B1D38"));
+		AVGCCcheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		FanIncheckbox = new JCheckBox();
-		FanIncheckbox.setBackground(Color.decode("#1B1D38"));
+		FanIncheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		FanOutcheckbox = new JCheckBox();
-		FanOutcheckbox.setBackground(Color.decode("#1B1D38"));
+		FanOutcheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		NOCcheckbox = new JCheckBox();
-		NOCcheckbox.setBackground(Color.decode("#1B1D38"));
+		NOCcheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		DITcheckbox = new JCheckBox();
-		DITcheckbox.setBackground(Color.decode("#1B1D38"));
+		DITcheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		BUGScheckbox = new JCheckBox();
-		BUGScheckbox.setBackground(Color.decode("#1B1D38"));
+		BUGScheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
 		LOCtextfield = new JTextField();
-		LOCtextfield.setBackground(Color.decode("#57596D"));
+		LOCtextfield.setBackground(Color.decode(componentsbgcolour));
+		LOCtextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
 		LOCtextfield.setToolTipText("Enter max value for LOC");
 		LOCtextfield.setColumns(10);
 		LOCtextfield.setText("LOC");
-		LOCtextfield.setForeground(Color.decode("#58D9FF"));
+		LOCtextfield.setForeground(Color.decode(textcolour));
 		LOCtextfield.addFocusListener(new FocusListener(){
 
 			@Override
@@ -505,10 +548,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		WMCtextfield = new JTextField();
 		WMCtextfield.setToolTipText("Enter max value for WMC");
+		WMCtextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
 		WMCtextfield.setColumns(10);
-		WMCtextfield.setBackground(Color.decode("#57596D"));
+		WMCtextfield.setBackground(Color.decode(componentsbgcolour));
 		WMCtextfield.setText("WMC");
-		WMCtextfield.setForeground(Color.decode("#58D9FF"));
+		WMCtextfield.setForeground(Color.decode(textcolour));
 		WMCtextfield.addFocusListener(new FocusListener(){
 
 			@Override
@@ -526,10 +570,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		CBOtextfield = new JTextField();
 		CBOtextfield.setToolTipText("Enter max value for CBO");
+		CBOtextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
 		CBOtextfield.setColumns(10);
-		CBOtextfield.setBackground(Color.decode("#57596D"));
+		CBOtextfield.setBackground(Color.decode(componentsbgcolour));
 		CBOtextfield.setText("CBO");
-		CBOtextfield.setForeground(Color.decode("#58D9FF"));
+		CBOtextfield.setForeground(Color.decode(textcolour));
 		CBOtextfield.addFocusListener(new FocusListener(){
 
 			@Override
@@ -547,10 +592,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		LCOMtextfield = new JTextField();
 		LCOMtextfield.setToolTipText("Enter max value for LCOM");
+		LCOMtextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
 		LCOMtextfield.setColumns(10);
-		LCOMtextfield.setBackground(Color.decode("#57596D"));
+		LCOMtextfield.setBackground(Color.decode(componentsbgcolour));
 		LCOMtextfield.setText("LCOM");
-		LCOMtextfield.setForeground(Color.decode("#58D9FF"));
+		LCOMtextfield.setForeground(Color.decode(textcolour));
 		LCOMtextfield.addFocusListener(new FocusListener(){
 
 			@Override
@@ -568,10 +614,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		AVGCCtextfield = new JTextField();
 		AVGCCtextfield.setToolTipText("Enter max value for AVGCC");
+		AVGCCtextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
 		AVGCCtextfield.setColumns(10);
-		AVGCCtextfield.setBackground(Color.decode("#57596D"));
+		AVGCCtextfield.setBackground(Color.decode(componentsbgcolour));
 		AVGCCtextfield.setText("AVGCC");
-		AVGCCtextfield.setForeground(Color.decode("#58D9FF"));
+		AVGCCtextfield.setForeground(Color.decode(textcolour));
 		AVGCCtextfield.addFocusListener(new FocusListener(){
 
 			@Override
@@ -589,10 +636,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		FanIntextfield = new JTextField();
 		FanIntextfield.setToolTipText("Enter max value for Fan In");
+		FanIntextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
 		FanIntextfield.setColumns(10);
-		FanIntextfield.setBackground(Color.decode("#57596D"));
+		FanIntextfield.setBackground(Color.decode(componentsbgcolour));
 		FanIntextfield.setText("Fan In");
-		FanIntextfield.setForeground(Color.decode("#58D9FF"));
+		FanIntextfield.setForeground(Color.decode(textcolour));
 		FanIntextfield.addFocusListener(new FocusListener(){
 
 			@Override
@@ -610,10 +658,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		FanOutfieldtext = new JTextField();
 		FanOutfieldtext.setToolTipText("Enter max value for Fan Out");
+		FanOutfieldtext.setBorder(new LineBorder(Color.decode(bordercolour)));
 		FanOutfieldtext.setColumns(10);
-		FanOutfieldtext.setBackground(Color.decode("#57596D"));
+		FanOutfieldtext.setBackground(Color.decode(componentsbgcolour));
 		FanOutfieldtext.setText("Fan Out");
-		FanOutfieldtext.setForeground(Color.decode("#58D9FF"));
+		FanOutfieldtext.setForeground(Color.decode(textcolour));
 		FanOutfieldtext.addFocusListener(new FocusListener(){
 
 			@Override
@@ -631,10 +680,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		NOCtextfield = new JTextField();
 		NOCtextfield.setToolTipText("Enter max value for NOC");
+		NOCtextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
 		NOCtextfield.setColumns(10);
-		NOCtextfield.setBackground(Color.decode("#57596D"));
+		NOCtextfield.setBackground(Color.decode(componentsbgcolour));
 		NOCtextfield.setText("NOC");
-		NOCtextfield.setForeground(Color.decode("#58D9FF"));
+		NOCtextfield.setForeground(Color.decode(textcolour));
 		NOCtextfield.addFocusListener(new FocusListener(){
 
 			@Override
@@ -651,11 +701,12 @@ public class MainFrame extends JFrame implements ActionListener{
 		});
 		
 		DITtextfield = new JTextField();
-		DITtextfield.setBackground(Color.decode("#57596D"));
+		DITtextfield.setBackground(Color.decode(componentsbgcolour));
+		DITtextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
 		DITtextfield.setToolTipText("Enter max value for DIT");
 		DITtextfield.setColumns(10);
 		DITtextfield.setText("DIT");
-		DITtextfield.setForeground(Color.decode("#58D9FF"));
+		DITtextfield.setForeground(Color.decode(textcolour));
 		DITtextfield.addFocusListener(new FocusListener(){
 
 			@Override
@@ -672,11 +723,12 @@ public class MainFrame extends JFrame implements ActionListener{
 		});
 		
 		BUGStextfield = new JTextField();
-		BUGStextfield.setBackground(Color.decode("#57596D"));
+		BUGStextfield.setBackground(Color.decode(componentsbgcolour));
+		BUGStextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
 		BUGStextfield.setToolTipText("Enter max value for BUGS");
 		BUGStextfield.setColumns(10);
 		BUGStextfield.setText("BUGS");
-		BUGStextfield.setForeground(Color.decode("#58D9FF"));
+		BUGStextfield.setForeground(Color.decode(textcolour));
 		BUGStextfield.addFocusListener(new FocusListener(){
 
 			@Override
@@ -729,15 +781,15 @@ public class MainFrame extends JFrame implements ActionListener{
 					}
 					
 					LOCtextfield.setEditable(false);
-					LOCtextfield.setBackground(Color.decode("#58D9FF"));
-					LOCtextfield.setForeground(Color.decode("#57596D"));
+					LOCtextfield.setBackground(Color.decode(selected));
+					LOCtextfield.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetLOC(lines);
 				}
 				else {
 					lines = 0;
 					LOCtextfield.setEditable(true);
-					LOCtextfield.setBackground(Color.decode("#57596D"));
-					LOCtextfield.setForeground(Color.decode("#58D9FF"));
+					LOCtextfield.setBackground(Color.decode(componentsbgcolour));
+					LOCtextfield.setForeground(Color.decode(textcolour));
 					LOCtextfield.setText("LOC"); 
 					WeMovin.SetLOC(lines);
 				}
@@ -780,15 +832,15 @@ public class MainFrame extends JFrame implements ActionListener{
 					}
 					
 					WMCtextfield.setEditable(false);
-					WMCtextfield.setBackground(Color.decode("#58D9FF"));
-					WMCtextfield.setForeground(Color.decode("#57596D"));
+					WMCtextfield.setBackground(Color.decode(selected));
+					WMCtextfield.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetWMC(methods);
 				}
 				else {
 					methods = 0;
 					WMCtextfield.setEditable(true);
-					WMCtextfield.setBackground(Color.decode("#57596D"));
-					WMCtextfield.setForeground(Color.decode("#58D9FF"));
+					WMCtextfield.setBackground(Color.decode(componentsbgcolour));
+					WMCtextfield.setForeground(Color.decode(textcolour));
 					WMCtextfield.setText("WMC");
 					WeMovin.SetWMC(methods);
 				}
@@ -831,15 +883,15 @@ public class MainFrame extends JFrame implements ActionListener{
 					}
 					
 					CBOtextfield.setEditable(false);
-					CBOtextfield.setBackground(Color.decode("#58D9FF"));
-					CBOtextfield.setForeground(Color.decode("#57596D"));
+					CBOtextfield.setBackground(Color.decode(selected));
+					CBOtextfield.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetCBO(cbo);
 				}
 				else {
 					cbo = 0;
 					CBOtextfield.setEditable(true);
-					CBOtextfield.setBackground(Color.decode("#57596D"));
-					CBOtextfield.setForeground(Color.decode("#58D9FF"));
+					CBOtextfield.setBackground(Color.decode(componentsbgcolour));
+					CBOtextfield.setForeground(Color.decode(textcolour));
 					CBOtextfield.setText("CBO");
 					WeMovin.SetCBO(cbo);
 				}
@@ -883,15 +935,15 @@ public class MainFrame extends JFrame implements ActionListener{
 						}
 					
 					LCOMtextfield.setEditable(false);
-					LCOMtextfield.setBackground(Color.decode("#58D9FF"));
-					LCOMtextfield.setForeground(Color.decode("#57596D"));
+					LCOMtextfield.setBackground(Color.decode(selected));
+					LCOMtextfield.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetLCOM(lcom);
 				}
 				else {
 					lcom = 0;
 					LCOMtextfield.setEditable(true);
-					LCOMtextfield.setBackground(Color.decode("#57596D"));
-					LCOMtextfield.setForeground(Color.decode("#58D9FF"));
+					LCOMtextfield.setBackground(Color.decode(componentsbgcolour));
+					LCOMtextfield.setForeground(Color.decode(textcolour));
 					LCOMtextfield.setText("LCOM");
 					WeMovin.SetLCOM(lcom);
 				}
@@ -907,7 +959,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					if(AVGCCtextfield.getText().toCharArray().length >= 120) {
 						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
 						        JOptionPane.ERROR_MESSAGE);
-						avgcc = 0;
+						avgcc = 0.0;
 						AVGCCtextfield.setText("AVGCC"); 
 						AVGCCcheckbox.setSelected(false);
 						return;
@@ -916,34 +968,36 @@ public class MainFrame extends JFrame implements ActionListener{
 					if(AVGCCtextfield.getText().equals(null) || AVGCCtextfield.getText().isEmpty() || StringUtils.isBlank(AVGCCtextfield.getText()) || AVGCCtextfield.getText().equals("AVGCC")) {
 						JOptionPane.showMessageDialog(new JFrame(), "Error: Value is missing! Enter a threshold value before ticking", "Error",
 						        JOptionPane.ERROR_MESSAGE);
-						avgcc = 0;
+						avgcc = 0.0;
 						AVGCCtextfield.setText("AVGCC"); 
 						AVGCCcheckbox.setSelected(false);
 						return;
 					}
 					
 					try {
-						avgcc = Integer.parseInt(AVGCCtextfield.getText());
+						avgcc = Double.parseDouble(AVGCCtextfield.getText());
+						System.out.println("In the MainFrame is: "+avgcc);
+//						avgcc = Integer.parseInt(AVGCCtextfield.getText());
 					}
 					catch(Exception ex) {
 						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
 						        JOptionPane.ERROR_MESSAGE);
-						avgcc = 0;
+						avgcc = 0.0;
 						AVGCCtextfield.setText("AVGCC"); 
 						AVGCCcheckbox.setSelected(false);
 						return;
 					}
 					
 					AVGCCtextfield.setEditable(false);
-					AVGCCtextfield.setBackground(Color.decode("#58D9FF"));
-					AVGCCtextfield.setForeground(Color.decode("#57596D"));
+					AVGCCtextfield.setBackground(Color.decode(selected));
+					AVGCCtextfield.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetAVGCC(avgcc);
 				}
 				else {
-					avgcc = 0;
+					avgcc = 0.0;
 					AVGCCtextfield.setEditable(true);
-					AVGCCtextfield.setBackground(Color.decode("#57596D"));
-					AVGCCtextfield.setForeground(Color.decode("#58D9FF"));
+					AVGCCtextfield.setBackground(Color.decode(componentsbgcolour));
+					AVGCCtextfield.setForeground(Color.decode(textcolour));
 					AVGCCtextfield.setText("AVGCC");
 					WeMovin.SetAVGCC(avgcc);
 				}
@@ -987,15 +1041,15 @@ public class MainFrame extends JFrame implements ActionListener{
 					}
 					
 					FanIntextfield.setEditable(false);
-					FanIntextfield.setBackground(Color.decode("#58D9FF"));
-					FanIntextfield.setForeground(Color.decode("#57596D"));
+					FanIntextfield.setBackground(Color.decode(selected));
+					FanIntextfield.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetFanIn(fanin);
 				}
 				else {
 					fanin = 0;
 					FanIntextfield.setEditable(true);
-					FanIntextfield.setBackground(Color.decode("#57596D"));
-					FanIntextfield.setForeground(Color.decode("#58D9FF"));
+					FanIntextfield.setBackground(Color.decode(componentsbgcolour));
+					FanIntextfield.setForeground(Color.decode(textcolour));
 					FanIntextfield.setText("FanIn");
 					WeMovin.SetFanIn(fanin);
 				}
@@ -1039,15 +1093,15 @@ public class MainFrame extends JFrame implements ActionListener{
 					}
 					
 					FanOutfieldtext.setEditable(false);
-					FanOutfieldtext.setBackground(Color.decode("#58D9FF"));
-					FanOutfieldtext.setForeground(Color.decode("#57596D"));
+					FanOutfieldtext.setBackground(Color.decode(selected));
+					FanOutfieldtext.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetFanOut(fanout);
 				}
 				else {
 					fanout = 0;
 					FanOutfieldtext.setEditable(true);
-					FanOutfieldtext.setBackground(Color.decode("#57596D"));
-					FanOutfieldtext.setForeground(Color.decode("#58D9FF"));
+					FanOutfieldtext.setBackground(Color.decode(componentsbgcolour));
+					FanOutfieldtext.setForeground(Color.decode(textcolour));
 					FanOutfieldtext.setText("FanOut");
 					WeMovin.SetFanOut(fanout);
 				}
@@ -1092,15 +1146,15 @@ public class MainFrame extends JFrame implements ActionListener{
 					}
 					
 					NOCtextfield.setEditable(false);
-					NOCtextfield.setBackground(Color.decode("#58D9FF"));
-					NOCtextfield.setForeground(Color.decode("#57596D"));
+					NOCtextfield.setBackground(Color.decode(selected));
+					NOCtextfield.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetNOC(noc);
 				}
 				else {
 					noc = 0;
 					NOCtextfield.setEditable(true);
-					NOCtextfield.setBackground(Color.decode("#57596D"));
-					NOCtextfield.setForeground(Color.decode("#58D9FF"));
+					NOCtextfield.setBackground(Color.decode(componentsbgcolour));
+					NOCtextfield.setForeground(Color.decode(textcolour));
 					NOCtextfield.setText("NOC");
 					WeMovin.SetNOC(noc);
 				}
@@ -1144,15 +1198,15 @@ public class MainFrame extends JFrame implements ActionListener{
 					}
 					
 					DITtextfield.setEditable(false);
-					DITtextfield.setBackground(Color.decode("#58D9FF"));
-					DITtextfield.setForeground(Color.decode("#57596D"));
+					DITtextfield.setBackground(Color.decode(selected));
+					DITtextfield.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetDIT(dit);
 				}
 				else {
 					dit = 0;
 					DITtextfield.setEditable(true);
-					DITtextfield.setBackground(Color.decode("#57596D"));
-					DITtextfield.setForeground(Color.decode("#58D9FF"));
+					DITtextfield.setBackground(Color.decode(componentsbgcolour));
+					DITtextfield.setForeground(Color.decode(textcolour));
 					DITtextfield.setText("DIT"); 
 					WeMovin.SetDIT(dit);
 				}
@@ -1196,15 +1250,15 @@ public class MainFrame extends JFrame implements ActionListener{
 					}
 					
 					BUGStextfield.setEditable(false);
-					BUGStextfield.setBackground(Color.decode("#58D9FF"));
-					BUGStextfield.setForeground(Color.decode("#57596D"));
+					BUGStextfield.setBackground(Color.decode(selected));
+					BUGStextfield.setForeground(Color.decode(selectedtxtcolour));
 					WeMovin.SetB(bug1);
 				}
 				else {
 					bug1 = 0;
 					BUGStextfield.setEditable(true);
-					BUGStextfield.setBackground(Color.decode("#57596D"));
-					BUGStextfield.setForeground(Color.decode("#58D9FF"));
+					BUGStextfield.setBackground(Color.decode(componentsbgcolour));
+					BUGStextfield.setForeground(Color.decode(textcolour));
 					BUGStextfield.setText("BUGS"); 
 					WeMovin.SetB(bug1);
 				}
@@ -1212,13 +1266,13 @@ public class MainFrame extends JFrame implements ActionListener{
 		});
 		
 		panel = new JPanel(); 
-		panel.setBackground(Color.decode("#57596D"));
-		panel.setBorder(new LineBorder(Color.decode("#58D9FF")));
+		panel.setBackground(Color.decode(componentsbgcolour));
+		panel.setBorder(new LineBorder(Color.decode(bordercolour)));
 		
 //		scrollPane_1 = new JScrollPane();
-		scrollPane_1.getViewport().setBackground(Color.decode("#57596D"));
-		scrollPane_1.getViewport().setForeground(Color.decode("#58D9FF"));
-		scrollPane_1.setBorder(new LineBorder(Color.decode("#58D9FF")));
+		scrollPane_1.getViewport().setBackground(Color.decode(componentsbgcolour));
+		scrollPane_1.getViewport().setForeground(Color.decode(textcolour));
+		scrollPane_1.setBorder(new LineBorder(Color.decode(bordercolour)));
 		
 		/*
 		DITcheckbox = new JCheckBox("New check box");
@@ -1230,7 +1284,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		BUGStextfield = new JTextField();
 		BUGStextfield.setColumns(10);
-		*/
+		*/		
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -1239,70 +1293,66 @@ public class MainFrame extends JFrame implements ActionListener{
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-								.addComponent(btnbinfolder, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-								.addComponent(btnsrcfolder, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(bintextpane, GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE)
-								.addComponent(srctextpane, GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE)
 								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_contentPane.createSequentialGroup()
-											.addGap(165)
-											.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-												.addComponent(DITcheckbox, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-												.addComponent(CBOcheckbox, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(LOCcheckbox, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(WMCcheckbox, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addComponent(LCOMcheckbox))
-											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-													.addComponent(WMCtextfield, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-													.addComponent(LOCtextfield, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
-													.addComponent(DITtextfield, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE))
-												.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-													.addComponent(LCOMtextfield, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-													.addComponent(CBOtextfield, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)))
-											.addGap(34)
-											.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(AVGCCcheckbox)
-												.addGroup(gl_contentPane.createSequentialGroup()
-													.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-														.addComponent(BUGScheckbox, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-														.addComponent(NOCcheckbox, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-													.addPreferredGap(ComponentPlacement.RELATED)
-													.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-														.addComponent(BUGStextfield, 0, 0, Short.MAX_VALUE)
-														.addComponent(NOCtextfield, GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-														.addComponent(FanOutfieldtext, GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-														.addComponent(FanIntextfield, GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-														.addComponent(AVGCCtextfield, GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE))
-													.addGap(65))
-												.addComponent(FanIncheckbox)
-												.addComponent(FanOutcheckbox)))
-										.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-											.addComponent(btnexcelfile, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
-											.addGap(98)))
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+										.addComponent(btnbinfolder, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+										.addComponent(btnsrcfolder, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
+									.addGap(18))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 228, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(bintextpane, GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)
+								.addComponent(srctextpane, GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)
+								.addGroup(gl_contentPane.createSequentialGroup()
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 										.addGroup(gl_contentPane.createSequentialGroup()
-											.addPreferredGap(ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
+											.addGap(165)
 											.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(bugs, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-												.addComponent(panel, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)))
+												.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+													.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+														.addComponent(DITcheckbox, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+														.addComponent(CBOcheckbox, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addComponent(LOCcheckbox, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addComponent(WMCcheckbox, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addComponent(LCOMcheckbox))
+													.addPreferredGap(ComponentPlacement.UNRELATED)
+													.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+														.addComponent(WMCtextfield, GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+														.addComponent(LOCtextfield, GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+														.addComponent(DITtextfield, GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+														.addComponent(LCOMtextfield, GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+														.addComponent(CBOtextfield, GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+													.addGap(34)
+													.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+														.addComponent(AVGCCcheckbox)
+														.addGroup(gl_contentPane.createSequentialGroup()
+															.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+																.addComponent(BUGScheckbox, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+																.addComponent(NOCcheckbox, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+															.addPreferredGap(ComponentPlacement.RELATED)
+															.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+																.addComponent(BUGStextfield, 0, 0, Short.MAX_VALUE)
+																.addComponent(NOCtextfield, GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+																.addComponent(FanOutfieldtext, GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+																.addComponent(FanIntextfield, GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+																.addComponent(AVGCCtextfield, GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
+															.addGap(65))
+														.addComponent(FanIncheckbox)
+														.addComponent(FanOutcheckbox)))
+												.addComponent(metricsinfo)))
 										.addGroup(gl_contentPane.createSequentialGroup()
-											.addPreferredGap(ComponentPlacement.RELATED)
-											.addComponent(btncorrel)
-											.addGap(18)))))
-							.addGap(0))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 963, Short.MAX_VALUE)
-							.addContainerGap())
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(btnanalyser)
-							.addContainerGap(906, Short.MAX_VALUE))))
+											.addComponent(btnexcelfile, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+											.addGap(98)))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+										.addComponent(bugs, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+										.addComponent(panel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+										.addComponent(btncorrel)))))
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 963, Short.MAX_VALUE)
+						.addComponent(btnanalyser, Alignment.LEADING))
+					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -1315,68 +1365,67 @@ public class MainFrame extends JFrame implements ActionListener{
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnsrcfolder)
 						.addComponent(srctextpane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(72)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(bugs, 0, 0, Short.MAX_VALUE)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(panel, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addComponent(AVGCCtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(AVGCCcheckbox))
-									.addGap(18)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(FanIntextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(FanIncheckbox))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(FanOutcheckbox)
-										.addComponent(FanOutfieldtext, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(NOCtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(NOCcheckbox))))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(BUGScheckbox)
-								.addComponent(BUGStextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(LOCcheckbox)
-								.addComponent(LOCtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(16)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(WMCcheckbox)
-								.addComponent(WMCtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(8)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(CBOcheckbox)
-								.addComponent(CBOtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(LCOMcheckbox)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(2)
-									.addComponent(LCOMtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(DITtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(DITcheckbox))))
+					.addGap(42)
+					.addComponent(metricsinfo)
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 167, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+							.addGroup(gl_contentPane.createSequentialGroup()
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+									.addComponent(AVGCCtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(bugs, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+									.addComponent(AVGCCcheckbox))
+								.addGap(18)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									.addComponent(FanIntextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(FanIncheckbox))
+								.addPreferredGap(ComponentPlacement.UNRELATED)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									.addComponent(FanOutcheckbox)
+									.addComponent(FanOutfieldtext, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									.addComponent(NOCtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(NOCcheckbox))
+								.addGap(18)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+									.addComponent(BUGScheckbox)
+									.addComponent(BUGStextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addGroup(gl_contentPane.createSequentialGroup()
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									.addComponent(LOCcheckbox)
+									.addComponent(LOCtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addGap(16)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+									.addComponent(WMCcheckbox)
+									.addComponent(WMCtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addGap(8)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+									.addComponent(CBOcheckbox)
+									.addComponent(CBOtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addGap(18)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									.addComponent(LCOMcheckbox)
+									.addGroup(gl_contentPane.createSequentialGroup()
+										.addGap(2)
+										.addComponent(LCOMtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addGap(18)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+									.addComponent(DITtextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(DITcheckbox)))
+							.addComponent(panel, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)))
 					.addGap(48)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnanalyser, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btncorrel, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnexcelfile, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnexcelfile, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btncorrel, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
 					.addGap(19)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 168, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
-		contentPane.setBackground(Color.decode("#1B1D38"));
+		contentPane.setBackground(Color.decode(mainbackgroundcolour));
 
 		
 	    ListSelectionModel ColumnSelectionModel = table.getSelectionModel();

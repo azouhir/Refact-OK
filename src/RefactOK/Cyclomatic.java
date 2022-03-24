@@ -13,6 +13,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.DoStatement;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SwitchCase;
 import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
@@ -21,7 +22,39 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 public class Cyclomatic {
 	
 	static double cc = 0;
+	static int wmc = 0;
 	static StringBuffer output = new StringBuffer();
+	static StringBuffer wmcoutput = new StringBuffer();
+	
+	public static int wmc(String line, String classname, boolean produce) {
+		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		parser.setSource(line.toCharArray());
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		
+		final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+		
+		wmc = 0;
+		wmcoutput = new StringBuffer();
+		
+		wmcoutput.append(classname);
+		wmcoutput.append("\n");
+		wmcoutput.append("");
+		
+		cu.accept(new ASTVisitor() {
+			public boolean visit(MethodDeclaration node) {
+				wmc++;
+				wmcoutput.append(node);
+				wmcoutput.append("\n");
+				wmcoutput.append("");
+				return false;
+			}
+		});
+		
+		if(produce && wmc > 15) {
+		Output.setmethoutput(wmcoutput.toString());
+		}
+		return wmc;
+	}
 	
 	public static double complexity(String line, String classname, File file) {
 		
@@ -153,7 +186,7 @@ public class Cyclomatic {
 			}
 
 		});
-		
+/*		
 		try {
 			double result = cc / CBO.numberofmethods(file, false);
 			if(result > 5) {
@@ -161,6 +194,13 @@ public class Cyclomatic {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+*/		
+		double result = cc/ wmc(line, classname, false);
+		if(result > 5) {
+			Output.setccoutput(output.toString());
 		}
 		return cc;
 	}

@@ -11,6 +11,7 @@ public class Output {
 	static StringBuffer bugoutput = new StringBuffer();
 	static StringBuffer lcomoutput = new StringBuffer();
 	
+	//method that empties all the strings, called when new analysis is run
 	public static void trigger() {
 		ccoutput.delete(0, ccoutput.length());
 		fooutput.delete(0, fooutput.length());
@@ -21,6 +22,9 @@ public class Output {
 		bugoutput.delete(0, bugoutput.length());
 		lcomoutput.delete(0, lcomoutput.length());
 	}
+	
+	//setters to set the string with the affected code areas (called by model classes)	
+	//getters to get string with affected code areas to display in instruction (called by frontend)
 	
 	public static void setlcomoutput(String lcom) {
 		lcomoutput.append(lcom);

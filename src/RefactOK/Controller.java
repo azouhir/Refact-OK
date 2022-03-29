@@ -26,8 +26,9 @@ import javax.xml.stream.events.Characters;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-public class WeMovin {
+public class Controller {
 	
+	//all attributes used in current class
 	static int lines = 0;
 	static int methods = 0;
 	static int cbo = 0;
@@ -49,15 +50,9 @@ public class WeMovin {
 	static File[] tempclassfiles;
 	
 	
-	
 	static boolean print = false;
 	
-	public static void main(String[] args) {
-		
-		Welcome();
-		
-	}
-	
+	//Metric threshold setters
 	public static void SetLOC(int l) {
 		lines = l;
 	}
@@ -90,119 +85,7 @@ public class WeMovin {
 		bug1 = b;
 	}
 	
-	public static void Welcome() {
-		
-		System.out.println("Welcome to RefactOK!");
-		System.out.println(" ");
-		System.out.println("Would you like to specify any threshold values? (y or n)");
-		
-		Scanner thresholds = new Scanner(System.in);
-		String Thresholds = thresholds.nextLine();
-		
-		if(Thresholds.equals("y")) {
-			
-			System.out.println("Would you like to specify a value for WMC?");
-			Scanner chose = new Scanner(System.in);
-			String yn = chose.nextLine();
-			
-			if(yn.equals("y")) {
-			System.out.println("Specify minimum number of methods in a class to be considered:");
-			Scanner meth = new Scanner(System.in);
-			methods = meth.nextInt();
-			}
-			
-			System.out.println("Would you like to specify a value for LOC?");
-			Scanner chose1 = new Scanner(System.in);
-			String yn1 = chose1.nextLine();
-			
-			if(yn1.equals("y")){
-			System.out.println("Specify minimum number of lines in a class to be considered: ");
-			Scanner lin = new Scanner(System.in);
-			lines = lin.nextInt();
-			}
-			
-			System.out.println("Would you like to specify a value for CBO?");
-			Scanner chose2 = new Scanner(System.in);
-			String yn2 = chose2.nextLine();
-			
-			if(yn2.equals("y")) {
-			System.out.println("Specify minimum number of coupling between objects in a class to be considered: ");
-			Scanner cb = new Scanner(System.in);
-			cbo = cb.nextInt();
-			}
-			
-			System.out.println("Would you like to specify a value for Fan-In?");
-			Scanner chose3 = new Scanner(System.in);
-			String yn3 = chose3.nextLine();
-			
-			if(yn3.equals("y")) {
-			System.out.println("Specify minimum number of fan-in connections in a class to be considered: ");
-			Scanner fi = new Scanner(System.in);
-			fanin = fi.nextInt();
-			}
-			
-			System.out.println("Would you like to specify a value for Fan-Out?");
-			Scanner chose4 = new Scanner(System.in);
-			String yn4 = chose4.nextLine();
-			
-			if(yn4.equals("y")) {
-			System.out.println("Specify minimum number of fan-out connections in a class to be considered: ");
-			Scanner fo = new Scanner(System.in);
-			fanout = fo.nextInt();
-			}
-			
-			/*
-			System.out.println("Specify value for lcom4 in a class to be considered: ");
-			Scanner lc = new Scanner(System.in);
-			lcom = lc.nextInt();
-			
-			System.out.println("Specify minimum number of children in a class to be considered: ");
-			Scanner nc = new Scanner(System.in);
-			noc = nc.nextInt();
-			
-			System.out.println("Specify minimum average cyclomatic complexity in a class to be considered: ");
-			Scanner acc = new Scanner(System.in);
-			avgcc = acc.nextInt();
-			*/
-			
-			GetStringFile();
-			
-			System.out.println("");
-			System.out.println("Would you like to print your results?");
-			Scanner pr = new Scanner(System.in);
-			String pri = pr.nextLine();
-			
-			if(pri.equals("y")) {
-				print = true;
-				GetStringFile();
-			}
-			else {
-				System.out.println("bye bye!");
-			}
-		}
-		else if (Thresholds.equals("print")){
-			print = true;
-			GetStringFile();
-		}
-		
-		else if (Thresholds.equals("n")) {
-			GetStringFile();
-			
-			System.out.println("");
-			System.out.println("Would you like to print your results?");
-			Scanner pr = new Scanner(System.in);
-			String pri = pr.nextLine();
-			
-			if(pri.equals("y")) {
-				print = true;
-				GetStringFile();
-			}
-			else {
-				System.out.println("bye bye!");
-			}
-		}
-	}
-	
+	//check files set in the front end to find erroneous entries
 	public static boolean validFiles(String src, String bin) {
 		
 		try {
@@ -218,35 +101,43 @@ public class WeMovin {
 		boolean nojava = false;
 		
 		for(int i = 0; i < javafiles.length; i++) {
+			
+			//get only class name with no extension
 			srcnames[i] = javafiles[i].getName().replaceFirst("[.][^.]+$", "");
 			
+			//catch any file that is not a java class
 			if(!FilenameUtils.getExtension(javafiles[i].getName()).equals("java")) {
 				nojava = true;
 			}
 		}
 		
+		//find all byte code classes of the respective java classes
 		for(int j = 0; j < tempclassfiles.length; j++) {
 			if(ArrayUtils.contains(srcnames, tempclassfiles[j].getName().replaceFirst("[.][^.]+$", ""))) {					
 				classfiles.add(tempclassfiles[j]);
 			}	
 		}
 		
+		//catch any non byte code class in the folder
 		for(int i = 0; i < classfiles.size(); i++) {
 			if(!FilenameUtils.getExtension(classfiles.get(i).getName()).equals("class")) {
 				noclass = true;
 			}
 		}
 		
+		//find if any folder path doesn't contain the right files
 		if(noclass || nojava) {
-			System.out.println("error is here! One of the folders contains non java file");
+			System.out.println("error is here! One of the folders contains non java or non class files");
 			return false;
 		}
 		
+		//find if number of classes is not the same in both folders
 		if(javafiles.length != classfiles.size()) {
 			System.out.println("error is here! lenght not equal");
 			return false;	
 		}
 		}
+		//catch any possible exception
 		catch(Exception e) {
 			System.out.println("error is here! Exception");
 			System.out.println(e);
@@ -256,23 +147,23 @@ public class WeMovin {
 		return true;
 	}
 	
+	//set files set in the frontend after validation from previous method
 	public static void setFiles(String src, String bin) {
 		
 		file2 = new File(src);
 		file3 = new File(bin);
-		
-//		ArrayUtils.removeAll(javafiles, javafiles.length);
-//		ArrayUtils.removeAll(tempclassfiles, tempclassfiles.length);
 		
 		javafiles = file2.listFiles();
 		tempclassfiles = file3.listFiles();
 		ArrayList<File> classfiles = new ArrayList<>();
 		String[] srcnames = new String[file2.listFiles().length];
 		
+		//get all java classes with no extension in the variable file2
 		for(int i = 0; i < javafiles.length; i++) {
 			srcnames[i] = javafiles[i].getName().replaceFirst("[.][^.]+$", "");
 		}
 
+		//get all byte code classes with no extension in the variable file3
 			for(int j = 0; j < tempclassfiles.length; j++) {
 				if(ArrayUtils.contains(srcnames, tempclassfiles[j].getName().replaceFirst("[.][^.]+$", ""))) {					
 					classfiles.add(tempclassfiles[j]);
@@ -282,6 +173,7 @@ public class WeMovin {
 		tempclassfiles = classfiles.toArray(new File[classfiles.size()]);	
 	}
 	
+	//file getters
 	public static File getFile() {
 		return file2;
 	}
@@ -294,6 +186,7 @@ public class WeMovin {
 		return file3.toString();
 	}
 	
+	//bugs getters and setters
 	public static void SetBugs(int nofbugs) {
 		bugs =  nofbugs;
 	}
@@ -310,6 +203,7 @@ public class WeMovin {
 		return current;
 	}
 	
+	//correlation setter and getter
 	public static void SetXY(List xy) {
 		XY = xy;
 	}
@@ -318,64 +212,7 @@ public class WeMovin {
 		return XY;
 	}
 	
-	public static void GetStringFile() {
-		
-		try {
-		
-	  	ArrayList<Integer> h = new ArrayList<>();
-	  	Map<String,Set <String>> map = new HashMap<String, Set<String>>();
-	  	
-//	  	File file = new File("C:\\Users\\anasz\\eclipse-workspace\\Whatever\\src\\BS.java");
-//	  	File file = new File("C:\\Users\\anasz\\eclipse-workspace\\Whatever\\src\\BS.java");
-	  	File file2 = new File("C:\\Users\\anasz\\eclipse-workspace\\Whatever\\src");
-	  	File file3 = new File("C:\\Users\\anasz\\eclipse-workspace\\Whatever\\bin");
-//        File file3 = new File("C:\\Users\\anasz\\eclipse-workspace\\ScalesProblem\\bin\\ScPb");
-//        File file2 = new File("C:\\Users\\anasz\\eclipse-workspace\\ScalesProblem\\src\\ScPb");
-        
-        File[] listOfFiles = file2.listFiles();
-        File[] listofFiles = file3.listFiles();
-        
-        for(int i = 0; i < listOfFiles.length; i++) {
-        	       
-        Scanner scanner = new Scanner(listOfFiles[i]);
-        StringBuffer line0 = new StringBuffer();
-        
-        while(scanner.hasNextLine()) {
-        line0.append(scanner.nextLine());
-        line0.append("\n");}
-        
-        StringBuffer line = removecomments(line0);
-	    
-        if(print == false) {
-        if(countlines(listOfFiles[i]) >= lines) {
-        	if(CBO.numberofmethods(listofFiles[i], false) >= methods) {
-        		if((Integer)CBO.fanout(listofFiles[i], map, listofFiles, false).get(2) >= cbo) {
-        			if((Integer)CBO.fanout(listofFiles[i], map, listofFiles, false).get(0) >= fanin) {
-        				if((Integer)CBO.fanout(listofFiles[i], map, listofFiles, false).get(1) >= fanout) {        					
-        		System.out.println("Class: " + listOfFiles[i].getName());
-        		Printing(line0.toString(),line,listOfFiles[i],listofFiles[i],listofFiles, listOfFiles);
-        		System.out.println("");
-        		
-        				}}}
-        	}
-        }
-        }
-        
-        if(print == true) {
-//        	Excel.CreateFile(file2, file3, lines, methods, cbo);
-        }
-        }
-        
-		} catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	}
-	
-	public static void createExcel() {
-//		Excel.CreateFile(file2, file3);
-//		Excel.CreateFile2(row);
-	}
-	
+	//method to build the table containing metric values
 	public static Object[] BuildTable(DefaultTableModel model) throws InterruptedException, IOException {
 				
 		Object[] row = new Object[15];
@@ -383,12 +220,10 @@ public class WeMovin {
 		try {	
 		Map<String,Set <String>> map = new HashMap<String, Set<String>>();
 		
-/*		File[] listOfFiles = file2.listFiles();
-        File[] listofFiles = file3.listFiles(); */
-		
 		File[] listOfFiles = javafiles;
         File[] listofFiles = tempclassfiles;
         
+        //loop trhough every class in the folder path to calculate metrics
         for(int i = 0; i < listOfFiles.length; i++) {
         	       
         	Scanner scanner = new Scanner(listOfFiles[i]);
@@ -396,12 +231,14 @@ public class WeMovin {
         	
         	setbin(listofFiles[i]);
         	
+        	//get content of java class in a stringbuffer
         	while(scanner.hasNextLine()) {
         		line0.append(scanner.nextLine());
         		line0.append("\n");}
         		
         		StringBuffer line = removecomments(line0);
         		
+        		//calculate all metrics by calling respective methods
         		String zero = listOfFiles[i].getName();
         		int one = countlines(listOfFiles[i]);
         		int two = countblanklines(line.toString());
@@ -409,20 +246,20 @@ public class WeMovin {
         		int four = countmultilinecomments(line0.toString());
         		int five = countidentation(listOfFiles[i]);
         		double six = Cyclomatic.complexity(line0.toString(), listOfFiles[i].getName(), listofFiles[i]);
-//        		int six = cyclomaticcomplexity(line);
         		int seven = (int) CBO.fanout(listofFiles[i], map, listofFiles, false).get(0);
         		int eight = (int) CBO.fanout(listofFiles[i], map, listofFiles, false).get(1);
         		int nine = (int) CBO.fanout(listofFiles[i], map, listofFiles, true).get(2);
+        		//temprarily not used due to methods being calcualted in AST 
 //        		int ten = CBO.numberofmethods(listofFiles[i], true);
         		int ten = Cyclomatic.wmc(line0.toString(), listOfFiles[i].getName(), true);
         		int eleven = Group.loadGroups(listofFiles[i]).size();
         		int twelve = NOC.noc(listofFiles,listofFiles[i],0);
         		int thirteen = NOC.DIT(listofFiles[i], 0, listofFiles);
-//        		int twelve = NOC(listOfFiles[i], listOfFiles);
         		Application.setdir(listofFiles[i].toString());
         		new Application().findBugs();
         		int fourteen = bugs;
         		
+        		//threshold filtering to ensure only classes with right amount of metric are included in the table
         		if(one >= lines) {
         			if(six/ten >= avgcc) {
         				if(seven >= fanin) {
@@ -434,10 +271,7 @@ public class WeMovin {
         										if(thirteen >= dit) {
         											if(fourteen >= bug1) {
         												
-        												System.out.println("I am the value collected: "+ six);
-        												System.out.println("And I am the avgcc threshold: "+ avgcc);
-        												
-//        												double sixteen = six/ ten;
+        												//enter values in the table if meet threshold
         												row[0] = zero;
         												row[1] = one;
         												row[2] = two;
@@ -453,7 +287,8 @@ public class WeMovin {
         												row[12] = twelve;
         												row[13] = thirteen;
         												row[14] = fourteen;
-        			
+        										
+        										//add object to model in the frontend
         										model.addRow(row);
         											}
         										}
@@ -474,24 +309,10 @@ public class WeMovin {
 	        return null;
 	    }
 		
-//		Application.main(null);
-		
 		return row;
 	}
 	
-	public static void Files (File file) {
-		
-		File[] listOfFiles = file.listFiles();
-
-		for (int i = 0; i < listOfFiles.length; i++) {
-			  if (listOfFiles[i].isFile()) {
-			    System.out.println("File " + listOfFiles[i].getName());
-			  } else if (listOfFiles[i].isDirectory()) {
-			    System.out.println("Directory " + listOfFiles[i].getName());
-			  }
-			}
-	}
-	
+	//method to calculate correlation between 2 metric values
 	  public static double Calculatecorrelation(int[] c1, int[] c2) {
 		  
 		    double sx = 0.0;
@@ -524,6 +345,7 @@ public class WeMovin {
 		    return cov / sigmax / sigmay;
 		  }
 	  
+	  //method to calculate correlation between AVGCC and any other metric value
 	  public static double Calculatecorrelation(double[] c1, int[] c2) {
 		  
 		    double sx = 0.0;
@@ -556,44 +378,15 @@ public class WeMovin {
 		    return cov / sigmax / sigmay;
 		  }
 	
-	public static void Printing (String line0, StringBuffer line, File file, File file2, File[] file3, File[] file4) throws IOException, ClassNotFoundException {
-
-		Map<String,Set <String>> map = new HashMap<String, Set<String>>();
-		
-        System.out.println("LOC: " + countlines(file));
-        
-        System.out.println("Blank Lines: " + countblanklines(line.toString()));
-        
-        System.out.println("Single Lines Comments: " + countsinglelinecomments(line.toString()));
-        
-        System.out.println("Multi Line Comments: " + countmultilinecomments(line0));
-        
-        System.out.println("Identation count: " + countidentation(file));
-        
-        System.out.println("CC: " + cyclomaticcomplexity(line));
-        
-        //TEST
-        
-        System.out.println("Fan In: " +  CBO.fanout(file2, map, file3, false).get(0));
-        
-        System.out.println("Fan Out: " +  CBO.fanout(file2, map, file3, false).get(1));
-        
-        System.out.println("CBO: " +  CBO.fanout(file2, map, file3, false).get(2));
-        
-        System.out.println("WMC: " + CBO.numberofmethods(file2, false));
-        
-        System.out.println("LCOM4: " + Group.loadGroups(file2).size());
-        
-        System.out.println("NOC: " + NOC(file, file4));
-
-	}
-	
+	//method to count lines in a class
 	public static int countlines (File file) {
 		int classes = 0;		
 		try {
 			Scanner scanner = new Scanner(file);
 			while(classes >= 0) {
 				if(scanner.nextLine() != null) {
+					
+					//calculate lines if next line is not null
 					classes += 1;
 			}
 			else {
@@ -607,6 +400,7 @@ public class WeMovin {
 		return classes;
 	}
 	
+	//method to output indentation count in a class
 	public static int countidentation(File file) {
 		
 		int identation = 0;
@@ -616,6 +410,7 @@ public class WeMovin {
 		
 		while(scanner.hasNext()) {
 					final StringBuilder sb = new StringBuilder(scanner.nextLine());
+					//find white spaces in the line and count them in indentation
 					while (sb.length() > 0 && Character.isWhitespace(sb.charAt(0))) {
 				        sb.deleteCharAt(0);
 						identation++;
@@ -626,67 +421,13 @@ public class WeMovin {
 		
 		return identation;
 	}
-		
-	public static int countmethods (StringBuffer line) {
-		
-		int count = 0;
-		
-		try {
-			
-		Pattern METHOD_PATTERN = Pattern.compile("(public|protected|private|static|\\s) +[\\w\\<\\>\\[\\]]+\\s+(\\w+) *\\([^\\)]*\\) *(\\{?|[^;])");
-		
-		CharSequence charSequence = line.toString();
-		
-		Matcher countEmailMatcher = METHOD_PATTERN.matcher(charSequence);
-		
-		while (countEmailMatcher.find()) {
-		    count++;
-		}
-		
-		
-		} catch (Exception hello) {
-			
-			System.out.println(hello);
-			System.out.println("Fucked up");
-			return 0;
-		}
 	
-		return count;
-	}
-	
-	public static int cyclomaticcomplexity (StringBuffer line) {
-		int count = 0;
-		try {
-
-			Pattern if_PATTERN = Pattern.compile("^[^/][^/].*(if|else if|else)\\s*\\(*.\\)*\\s*", Pattern.MULTILINE);
-			Pattern switch_PATTERN = Pattern.compile("^[^/][^/].*(case|default)(.|\\w|\\s|\\d|:)", Pattern.MULTILINE);
-		
-			CharSequence charSequence = line.toString();
-			
-			Matcher countswitch = switch_PATTERN.matcher(charSequence);
-			Matcher countif = if_PATTERN.matcher(charSequence);
-			
-			while (countswitch.find()) {
-			    count++;
-			}
-			
-			while (countif.find()) {
-			    count++;
-			}
-			
-			
-			} catch (Exception hello) {
-				
-				System.out.println(hello);
-				System.out.println("Fucked up");
-				return 0;
-			}
-		return count;
-		}
-	
+	//method to remove comments from any given class file
 	public static StringBuffer removecomments(StringBuffer line) {
 		
         String line2 = line.toString();
+        
+        //replace all comment lines with empy "" thus remove them all
         String newline = line2.replaceAll("\\/\\*([\\S\\s]+?)\\*\\/", "");
         String lastline = newline.replaceAll("(?s)/\\*.*?\\*/", "");
         
@@ -696,10 +437,12 @@ public class WeMovin {
         return lline;
 	}
 	
+	//method to count multi line comments in a class
 	public static int countmultilinecomments(String line) {
 		
 		int mlcomments = 0;
 		
+		//regex for chunk of multiline comments
 		Pattern mlc = Pattern.compile("\\/\\*([\\S\\s]+?)\\*\\/");
 		
 		CharSequence charSequence = line.toString();
@@ -717,10 +460,12 @@ public class WeMovin {
 		return mlcomments;
 	}
 	
+	//method to count single line comments in a class
 	public static int countsinglelinecomments (String line) {
 		
 		int comments  = 0;
 		
+		//regex of single line comments
 		Pattern singlecomments = Pattern.compile("[/][/].*", Pattern.MULTILINE);
 		
 		CharSequence charsequence = line;
@@ -734,46 +479,12 @@ public class WeMovin {
 		return comments;
 	}
 	
-	public static int NOC (File checkfile, File[] file) {
-		
-		int NOC = 0;
-		
-		StringBuffer nocomments = null;
-		
-		try {
-
-		for(int i = 0; i < file.length; i++) {
-		
-		Scanner	scanner = new Scanner(file[i]);
-	    StringBuffer line = new StringBuffer();
-	    
-	    while(scanner.hasNextLine()) {
-	    line.append(scanner.nextLine());
-	    line.append("\n");}
-	    
-	    nocomments = removecomments(line);
-
-	    Pattern METHOD_PATTERN = Pattern.compile("extends " + checkfile.getName().replaceFirst("[.][^.]+$", ""));
-		
-		CharSequence charSequence = nocomments.toString();
-		
-		Matcher countEmailMatcher = METHOD_PATTERN.matcher(charSequence);
-		
-		while (countEmailMatcher.find()) {
-			NOC++;
-		}
-		}
-		
-		} catch (FileNotFoundException e) {
-		}
-		
-		return NOC;
-	}
-	
+	//Method to count number of blank lines in a class
 	public static int countblanklines (String line) {
 		
 		int blanks = 0;
 		
+		//regex to find empy line
 		Pattern blanklines = Pattern.compile("^\\s*$", Pattern.MULTILINE);
 
 		CharSequence charSequence = line;
@@ -781,6 +492,7 @@ public class WeMovin {
 		Matcher blines = blanklines.matcher(charSequence);
 		
 		while (blines.find()) {
+			//add 1 to counter for every blank line found
 			blanks++;
 		}
 

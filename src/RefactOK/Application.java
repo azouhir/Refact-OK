@@ -13,17 +13,16 @@ import java.util.Iterator;
 
 public class Application {
 	
-//	private static final String FINDSECBUGS_JAR_PATH = "C:\\Users\\anasz\\Downloads\\FindSec\\findsecbugs-plugin-1.9.0.jar";
-//	private static final String TARGET_DIR_PATH = WeMovin.Bin();
 	private static String TARGET_DIR_PATH;
 	StringBuffer repo = new StringBuffer();
 	
+	//Set directory path coming from controller
 	public static void setdir(String DIR) {
 		TARGET_DIR_PATH = DIR;
 	}
 	
 	private FindBugs2 findBugs;
-	
+	//Run Spotbugs
 	public Application(){
 		
 		this.findBugs = new FindBugs2();
@@ -35,22 +34,29 @@ public class Application {
 		
 		repo = new StringBuffer();
 		
-//		addPlugin();
+		//call method to set files in the project for analysis
 		setupFiles(project);
 		
 		BugCollection bugs = new SortedBugCollection();
+		
+		//call reporter class to set a new report where bug instances will be collected
 		BugReporter bugReporter = new MyReporter(bugs);
 		findBugs.setProject(project);
 		
 		findBugs.setDetectorFactoryCollection(DetectorFactoryCollection.instance());
 		findBugs.setBugReporter(bugReporter);
 		final UserPreferences defaultUserPreferences = UserPreferences.createDefaultUserPreferences();
+		
+		//change this to different effort levels to get specific bug types
 		defaultUserPreferences.setEffort(UserPreferences.EFFORT_MAX);
 		findBugs.setUserPreferences(defaultUserPreferences);
 		
+		//execute findbugs to collect bug instances
 		findBugs.execute();
 		
 		File file = new File(TARGET_DIR_PATH);
+		
+		//Create output string to show in instruction panel
 		Object[] temp = bugReporter.getBugCollection().getCollection().toArray();
 		repo.append(file.getName());
 		repo.append("\n");
@@ -61,43 +67,19 @@ public class Application {
 		repo.append("");
 		}
 		
+		//create output string to go in instruction panel if number of bugs higher 5
 		if(bugReporter.getBugCollection().getCollection().size() > 5) {
 			Output.setbugoutput(repo.toString());
 		}
 		
-		
-		
-		return Collections.unmodifiableCollection(findBugs.getBugReporter().getBugCollection().getCollection());
-		
+		//return the bug collection containing all the bugs found
+		return Collections.unmodifiableCollection(findBugs.getBugReporter().getBugCollection().getCollection());		
 	}
-	
-/*	private void addPlugin() {
-		try {
-			Path pluginPath = Paths.get(FINDSECBUGS_JAR_PATH);
-			ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-			Plugin plugin = Plugin.addCustomPlugin(pluginPath.toUri(), contextClassLoader);
-			System.out.println("Custom plugin aded: " + plugin);
-		} catch(PluginException e) {
-			System.err.println("Could not add plugin " + e.getMessage());
-		}
-	}
-*/
-	/*
+		
+	//Method to set main class file being analysed and auxiliary files path to allow analysis
 	private void setupFiles(Project project) {
-		project.addFile(TARGET_DIR_PATH);
 		
-		File file = new File(TARGET_DIR_PATH);
-		File[] files = file.listFiles();
-		
-		for(int i = 0; i < files.length; i++) {
-			File next = files[i];
-			if(!files[i].getName().equals(new File(TARGET_DIR_PATH).getName()))
-				project.addAuxClasspathEntry(files[i].getAbsolutePath());
-		}
-	}
-	*/
-	
-	private void setupFiles(Project project) {
+		//add string classpath to project path as this is the main class being analysed
 		project.addFile(TARGET_DIR_PATH);
 		
 		File file = new File(TARGET_DIR_PATH);
@@ -105,12 +87,17 @@ public class Application {
 		
 		for(int i = 0; i < files.length; i++) {
 			File next = files[i];
+			
+			//make sure current class doesn't go into auxiliary path
 			if(!files[i].getName().equals(file.getName())) {
+				
+				//add rest of the classes to auxiliary path
 				project.addAuxClasspathEntry(files[i].getAbsolutePath());
 			}
 		}
 	}
 
+	//main run findbugs method to run Spotbus
 	public static void main(String[] args) throws InterruptedException, IOException{
 		
 		System.out.println("Running Analyzer");

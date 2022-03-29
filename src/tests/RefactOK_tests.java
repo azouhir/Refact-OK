@@ -30,7 +30,7 @@ public class RefactOK_tests {
 	public void Test1enternullfilepaths() {
 		String bin = null;
 		String src = null;
-		Assert.assertEquals(false, WeMovin.validFiles(src, bin));
+		Assert.assertEquals(false, Controller.validFiles(src, bin));
 	}
 
 	@Test
@@ -38,7 +38,7 @@ public class RefactOK_tests {
 	public void Test2enterrandomstring() {
 		String bin = "Hello";
 		String src = "World";
-		Assert.assertEquals(false, WeMovin.validFiles(src, bin));
+		Assert.assertEquals(false, Controller.validFiles(src, bin));
 	}
 	
 	@Test
@@ -46,7 +46,7 @@ public class RefactOK_tests {
 	public void Test3entermixedpaths() {
 		String bin = "C:\\Users\\anasz\\eclipse-workspace\\Testing\\src";
 		String src = "C:\\Users\\anasz\\eclipse-workspace\\Testing\\bin";
-		Assert.assertEquals(false, WeMovin.validFiles(src, bin));
+		Assert.assertEquals(false, Controller.validFiles(src, bin));
 	}
 	
 	@Test
@@ -54,7 +54,7 @@ public class RefactOK_tests {
 	public void Test4enterrandomintegers() {
 		String bin = "1234";
 		String src = "5678";
-		Assert.assertEquals(false, WeMovin.validFiles(src, bin));
+		Assert.assertEquals(false, Controller.validFiles(src, bin));
 	}
 	
 	@Test
@@ -62,7 +62,7 @@ public class RefactOK_tests {
 	public void Test5enteremptyspaces() {
 		String bin = " ";
 		String src = " ";
-		Assert.assertEquals(false, WeMovin.validFiles(src, bin));
+		Assert.assertEquals(false, Controller.validFiles(src, bin));
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class RefactOK_tests {
 	public void Test6enterrightpath() {
 		String bin = "C:\\Users\\anasz\\eclipse-workspace\\Testing\\bin";
 		String src = "C:\\Users\\anasz\\eclipse-workspace\\Testing\\src";
-		Assert.assertEquals(true, WeMovin.validFiles(src, bin));
+		Assert.assertEquals(true, Controller.validFiles(src, bin));
 	}
 	
 	//Cyclomatic Complexity Class Tests start HERE

@@ -1,0 +1,18 @@
+The bin and src folder contain respectively the byte code classes of the system and the java
+classes of the system.
+
+Refact-OK.jar is an executable jar file that will run the tool on your machine if you decide
+to execute it. 
+
+Further information on the project can be found in the GitHub repository at:
+https://github.com/azouhir/Refact-OK/blob/main/Refact-OK.jar
+
+Additional information on the topic as well as the project can also be found in the website at:
+https://refactok.netlify.app/
+
+For further enquires email: 1835227@brunel.ac.uk
+If not accessible write at my personal email: anas.zouhir97@gmail.com
+
+Follow the links stated previously for a brief tutorial on the project.
+
+Enjoy!

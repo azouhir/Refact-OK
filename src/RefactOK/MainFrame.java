@@ -79,6 +79,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 public class MainFrame extends JFrame implements ActionListener{
 
+	//All GUI components are declared here
 	private JPanel contentPane;
 	private JButton btnsrcfolder;
 	private JButton btnbinfolder;
@@ -109,6 +110,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private JCheckBox LOCcheckbox;
 	private JCheckBox DITcheckbox;
 	private JCheckBox BUGScheckbox;
+	//metric threshold
 	private static int lines;
 	private static int methods;
 	private static int cbo;
@@ -119,6 +121,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private static double avgcc;
 	private static int dit;
 	private static int bug1;
+	//x and y columns for plot and correlation
 	private static String coly;
 	private static String colx;
 	private JPanel panel;
@@ -128,6 +131,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private int[] Yi;
 	private JTable table;
 	private JTextArea instructions;
+	//color codes of the GUI
 	private String mainbackgroundcolour = "#feeafa";
 	private String textcolour = "#11151c";
 	private String componentsbgcolour = "#efd3d7";
@@ -137,7 +141,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private String selected = "#d66853";
 	private String selectedtxtcolour = "#FFFFFF";
 
-	// Launch the application. 
+	// Launch the application. Main method build the frame
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -155,8 +159,9 @@ public class MainFrame extends JFrame implements ActionListener{
 	}
 
 	
-	//Create the frame. 
+	//Constructor defines everything in the main frame
 	public MainFrame() {
+		//basic window settings
 		setTitle("refactOK!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1007, 606);
@@ -164,6 +169,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
+		//ensure the looks of the window follow machine environment (windows 10, 11, ios, linux, ...)
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
@@ -171,19 +177,16 @@ public class MainFrame extends JFrame implements ActionListener{
 			e1.printStackTrace();
 		}
 		
-		
+		//set bin selection folder button and all its settings
 		btnbinfolder = new JButton("Chose the 'bin' folder of your project");
 		btnbinfolder.addActionListener(this);
 		btnbinfolder.setBackground(Color.decode(componentsbgcolour));
 		btnbinfolder.setForeground(Color.decode(textcolour));
-///		btnbinfolder.setBorder(new LineBorder(Color.decode(bordercolour)));
 		btnbinfolder.setBorder(BorderFactory.createLineBorder(Color.decode(bordercolour), 4));
-//		btnbinfolder.setBackground(Color.decode(componentsbgcolour));
-//		btnbinfolder.setBorder(new MatteBorder (0,0,2,0, Color.decode(bordercolour)));
 		btnbinfolder.setOpaque(true);
 		btnbinfolder.setBorderPainted(false);
-//		btnbinfolder.setContentAreaFilled(true);
 		
+		//set src selection folder button and all its settings
 		btnsrcfolder = new JButton("Chose the 'source' folder of your project");
 		btnsrcfolder.addActionListener(this);
 		btnsrcfolder.setBackground(Color.decode(componentsbgcolour));
@@ -192,11 +195,13 @@ public class MainFrame extends JFrame implements ActionListener{
 		btnsrcfolder.setOpaque(true);
 		btnsrcfolder.setBorderPainted(false);
 		
+		//set bin text pane where file path will be displayed and all its settings
 		bintextpane = new JTextPane();
 		bintextpane.setBackground(Color.decode(componentsbgcolour));
 		bintextpane.setForeground(Color.decode(textcolour));
 		bintextpane.setBorder(new LineBorder(Color.decode(bordercolour)));
 		
+		//set src text pane where file path will be displayed and all its settings
 		srctextpane = new JTextPane();
 		srctextpane.setBackground(Color.decode(componentsbgcolour));
 		srctextpane.setForeground(Color.decode(textcolour));
@@ -204,10 +209,12 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		//CREATE TABLE TO DISPLAY DATA
 				table = new JTable();
+				//define headers
 				Object[] columns = {"Class", "LOC", "Blank Lines", "Single Line Comments", 
 						"Multi Line Comments", "Identation Count", "AVGCC", "Fan In", "Fan Out", 
 						"CBO", "WMC", "LCOM4", "NOC", "DIT", "BUGS"};
 				
+				//create model which will contain metric values
 				DefaultTableModel model = new DefaultTableModel();
 				model.setColumnIdentifiers(columns);
 				table.setModel(model);
@@ -216,7 +223,7 @@ public class MainFrame extends JFrame implements ActionListener{
 				table.setRowSelectionAllowed(false);
 				table.setColumnSelectionAllowed(true);
 				
-		
+		//define the pane that will display correlation (change name)
 		JTextPane bugs = new JTextPane();
 		bugs.setBackground(Color.decode(componentsbgcolour));
 		bugs.setForeground(Color.decode(textcolour));
@@ -227,7 +234,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		bugs.setAlignmentX(JTextPane.CENTER_ALIGNMENT);
 		bugs.setAlignmentY(JTextPane.CENTER_ALIGNMENT);
 		
-		
+		//define the scroll pane that will host the table, make it scrollable to scrool through all metrics
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBorder(new LineBorder(Color.decode(bordercolour)));
 		scrollPane.getViewport().setBackground(Color.decode(componentsbgcolour));
@@ -237,9 +244,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		table.getTableHeader().setForeground(Color.decode(textcolour));
 		table.getTableHeader().setOpaque(false);
 		
+		//define the isntructions area which will contain info on the class analysed
 		instructions = new JTextArea();
-//		instructions.setBounds(scrollPane_1.getBounds());
-//		instructions.setMaximumSize(scrollPane_1.getSize());
 		instructions.setText("LOC = returns Lines of Code in the class"+"\n"+
 							"WMC = returns number of methods in each class"+"\n"+
 							"CBO = returns the number of connections in each class"+"\n"+
@@ -260,6 +266,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		Font font = new Font("Dialog", Font.PLAIN, 10);
 		instructions.setFont(font);
 		
+		//define second scroll pain that will hold the instructions area so that user can scroll through info
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setPreferredSize(scrollPane_1.getSize());
 		scrollPane_1.setViewportView(instructions);
@@ -267,6 +274,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		scrollPane_1.setHorizontalScrollBarPolicy(scrollPane_1.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane_1.setVerticalScrollBarPolicy(scrollPane_1.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
+		//NEW ADDITION! Define button "info" which when clicked will show a visual tutorial on how to add metric values
 		JButton metricsinfo = new JButton("info");
 		metricsinfo.setContentAreaFilled(false);
 		metricsinfo.setForeground(Color.decode(textcolour));
@@ -292,6 +300,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			
 		});
 		
+		//define button analyse that will run the analysis
 		btnanalyser = new JButton("Analyse");
 		btnanalyser.setBackground(Color.decode(buttoncolours));
 		btnanalyser.setForeground(Color.decode(buttontext));
@@ -301,6 +310,8 @@ public class MainFrame extends JFrame implements ActionListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				
+				//perform basic checks to ensure no erroneous input is entered
 				
 				if(srctextpane.getText().toCharArray().length >= 120 || bintextpane.getText().toCharArray().length >= 120) {
 					JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
@@ -314,7 +325,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					return;
 				}
 				
-				if(!WeMovin.validFiles(srctextpane.getText(), bintextpane.getText())) {
+				if(!Controller.validFiles(srctextpane.getText(), bintextpane.getText())) {
 					JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong folder selected! One of your folders containg wrong files", "Error",
 					        JOptionPane.ERROR_MESSAGE);
 					return;
@@ -322,6 +333,7 @@ public class MainFrame extends JFrame implements ActionListener{
 				
 				DialogWait wait = new DialogWait();
 
+				//start swing worker to display dialog box while running analysis in the back
 				SwingWorker<Void, Void> mySwingWorker = new SwingWorker<Void, Void>() {
 
 				    @Override
@@ -333,10 +345,11 @@ public class MainFrame extends JFrame implements ActionListener{
 				    	
 						model.setRowCount(0);
 						
-						WeMovin wm = new WeMovin();
+						Controller wm = new Controller();
 						wm.setFiles(srctextpane.getText(), bintextpane.getText());
 						
 						try {
+							//call controller and start collecting metrics
 							row = wm.BuildTable(model);
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(new JFrame(), "Error: Ops something went wrong! Check the folders you selected", "Error",
@@ -372,6 +385,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			}
 		});
 		
+		//define button "Correlation" that will calculate correlation between 2 metric columns and plot the graph
 		btncorrel = new JButton("Correlation");
 		btncorrel.setBackground(Color.decode(buttoncolours));
 		btncorrel.setForeground(Color.decode(buttontext));
@@ -381,6 +395,8 @@ public class MainFrame extends JFrame implements ActionListener{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				//normal checks to ensure 2 correct columns are selected
 				
 				if(table.getSelectedColumnCount() == 1) {
 					JOptionPane.showMessageDialog(new JFrame(), "Error: Missing Column! Only one column selected, select another one", "Error",
@@ -399,10 +415,14 @@ public class MainFrame extends JFrame implements ActionListener{
 					        JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				
+
+				//remove previous scatterplot
 				panel.removeAll();
 				XYSeriesCollection dataset = new XYSeriesCollection();
 		        XYSeries data = new XYSeries("data");
+		        
+		        //create 3 arrays, in case AVGCC is selected we need to filter out the doubles from the integers to avoid 
+		        //cast exceptions
 		        
 				int[] columns = table.getSelectedColumns();
 				int rowcount = model.getRowCount();
@@ -413,12 +433,12 @@ public class MainFrame extends JFrame implements ActionListener{
 				boolean second = false;
 				coly = table.getColumnName(columns[0]);
 				colx = table.getColumnName(columns[1]);
-
+				
+				//loop through the 2 columns selected
 				for (int i = 0; i < columns.length; i++) {
 					for(int row = 0; row < rowcount; row++) {
-									
-//						System.out.println(columns[i]);
-					
+
+					//ensure to cast to double if column selected is AVGCC
 					if(columns[i] == 6 && i == 0) {
 						int column = table.convertColumnIndexToModel(columns[i]);
 				        column3[row] = (double) model.getValueAt(row, column);;
@@ -430,6 +450,7 @@ public class MainFrame extends JFrame implements ActionListener{
 				        second = true;
 					}
 					
+					//cast to int if any other column is selected
 					if(i == 0 && columns[i] != 6) {
 				        int column = table.convertColumnIndexToModel(columns[i]);
 				        column1[row] = (int) model.getValueAt(row, column);
@@ -441,18 +462,19 @@ public class MainFrame extends JFrame implements ActionListener{
 					}
 				}	
 				
+					//call the correct correlation method based on the column selected (if contains AVGCC or not) Polymorphism
 					if(first) {
-						bugs.setText("Correl:"+WeMovin.Calculatecorrelation(column3, column2));
+						bugs.setText("Correl:"+Controller.Calculatecorrelation(column3, column2));
 					
 					}
 					else if(second) {
-						bugs.setText("Correl:"+WeMovin.Calculatecorrelation(column3, column1));
+						bugs.setText("Correl:"+Controller.Calculatecorrelation(column3, column1));
 					}
 					else {
-						bugs.setText("Correl:"+WeMovin.Calculatecorrelation(column1, column2));	
+						bugs.setText("Correl:"+Controller.Calculatecorrelation(column1, column2));	
 					}
 				
-				
+				//likewise add the correct column to the data needed that will plot the scatter plot
 				for(int i = 0; i < column1.length;i++) {
 					if(first) {
 						data.add(column3[i], column2[i]);
@@ -466,6 +488,7 @@ public class MainFrame extends JFrame implements ActionListener{
 				}
 				dataset.addSeries(data);
 
+				//create new chart by calling the method that will create the scatterplot and return it 
 				JFreeChart chart = createChart(dataset);
 		        ChartPanel chartPanel = new ChartPanel(chart);
 		        chartPanel.setPreferredSize(panel.getSize());
@@ -473,6 +496,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			}			
 		});
 		
+		//set "Generate Excel" button and all its settings
 		btnexcelfile = new JButton("Generate Excel");
 		btnexcelfile.setBackground(Color.decode(componentsbgcolour));
 		btnexcelfile.setForeground(Color.decode(textcolour));
@@ -483,16 +507,20 @@ public class MainFrame extends JFrame implements ActionListener{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				WeMovin wm = new WeMovin();
+				Controller wm = new Controller();
+				//check that the table is not empty 
 				if(!Excel.validateExcel(table)) {
 					
 					JOptionPane.showMessageDialog(new JFrame(), "Error: Table is empty! Analyse files before generating file", "Error",
 					        JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+				// call the method that creates adn opens a new excel sheet
 				Excel.CreateFile2(table);
 			}	
 		});
+		
+		//define threshold check boxes
 		
 		LOCcheckbox = new JCheckBox();
 		LOCcheckbox.setBackground(Color.decode(mainbackgroundcolour));
@@ -524,6 +552,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		BUGScheckbox = new JCheckBox();
 		BUGScheckbox.setBackground(Color.decode(mainbackgroundcolour));
 		
+		//define all text fields the all follow the same principle
+		
 		LOCtextfield = new JTextField();
 		LOCtextfield.setBackground(Color.decode(componentsbgcolour));
 		LOCtextfield.setBorder(new LineBorder(Color.decode(bordercolour)));
@@ -535,12 +565,14 @@ public class MainFrame extends JFrame implements ActionListener{
 
 			@Override
 			public void focusGained(FocusEvent e) {
+				//when textfield clicked delete the metric name written
 				LOCtextfield.setText("");
 			}
 
 			@Override
 			public void focusLost(FocusEvent e) {
 				if (LOCtextfield.getText().length() == 0) {  
+					//when not clicked put metric name back in to help user understand which is which
 					LOCtextfield.setText("LOC"); 
 				}
 			}	
@@ -744,11 +776,15 @@ public class MainFrame extends JFrame implements ActionListener{
 			}	
 		});
 		
+		//checkbox listeners they all follow the same principles
+		
 		LOCcheckbox.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(LOCcheckbox.isSelected()){
+					
+					//normal checks to ensure that user doesn't enter erroneous input
 					
 					if(LOCtextfield.getText().toCharArray().length >= 120) {
 						JOptionPane.showMessageDialog(new JFrame(), "Error: Out of Boundary! Over 120 characters entered", "Error",
@@ -780,18 +816,20 @@ public class MainFrame extends JFrame implements ActionListener{
 						return;
 					}
 					
+					//if input is fine set the metric threshold by calling the controller
 					LOCtextfield.setEditable(false);
 					LOCtextfield.setBackground(Color.decode(selected));
 					LOCtextfield.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetLOC(lines);
+					Controller.SetLOC(lines);
 				}
+				//else set the metric threshold to 0 and move on
 				else {
 					lines = 0;
 					LOCtextfield.setEditable(true);
 					LOCtextfield.setBackground(Color.decode(componentsbgcolour));
 					LOCtextfield.setForeground(Color.decode(textcolour));
 					LOCtextfield.setText("LOC"); 
-					WeMovin.SetLOC(lines);
+					Controller.SetLOC(lines);
 				}
 			}			
 		});
@@ -834,7 +872,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					WMCtextfield.setEditable(false);
 					WMCtextfield.setBackground(Color.decode(selected));
 					WMCtextfield.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetWMC(methods);
+					Controller.SetWMC(methods);
 				}
 				else {
 					methods = 0;
@@ -842,7 +880,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					WMCtextfield.setBackground(Color.decode(componentsbgcolour));
 					WMCtextfield.setForeground(Color.decode(textcolour));
 					WMCtextfield.setText("WMC");
-					WeMovin.SetWMC(methods);
+					Controller.SetWMC(methods);
 				}
 			}		
 		});
@@ -885,7 +923,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					CBOtextfield.setEditable(false);
 					CBOtextfield.setBackground(Color.decode(selected));
 					CBOtextfield.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetCBO(cbo);
+					Controller.SetCBO(cbo);
 				}
 				else {
 					cbo = 0;
@@ -893,7 +931,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					CBOtextfield.setBackground(Color.decode(componentsbgcolour));
 					CBOtextfield.setForeground(Color.decode(textcolour));
 					CBOtextfield.setText("CBO");
-					WeMovin.SetCBO(cbo);
+					Controller.SetCBO(cbo);
 				}
 			}			
 		});
@@ -937,7 +975,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					LCOMtextfield.setEditable(false);
 					LCOMtextfield.setBackground(Color.decode(selected));
 					LCOMtextfield.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetLCOM(lcom);
+					Controller.SetLCOM(lcom);
 				}
 				else {
 					lcom = 0;
@@ -945,7 +983,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					LCOMtextfield.setBackground(Color.decode(componentsbgcolour));
 					LCOMtextfield.setForeground(Color.decode(textcolour));
 					LCOMtextfield.setText("LCOM");
-					WeMovin.SetLCOM(lcom);
+					Controller.SetLCOM(lcom);
 				}
 			}
 		});
@@ -977,7 +1015,6 @@ public class MainFrame extends JFrame implements ActionListener{
 					try {
 						avgcc = Double.parseDouble(AVGCCtextfield.getText());
 						System.out.println("In the MainFrame is: "+avgcc);
-//						avgcc = Integer.parseInt(AVGCCtextfield.getText());
 					}
 					catch(Exception ex) {
 						JOptionPane.showMessageDialog(new JFrame(), "Error: Wrong type entered! Enter an Integer and try again", "Error",
@@ -991,7 +1028,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					AVGCCtextfield.setEditable(false);
 					AVGCCtextfield.setBackground(Color.decode(selected));
 					AVGCCtextfield.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetAVGCC(avgcc);
+					Controller.SetAVGCC(avgcc);
 				}
 				else {
 					avgcc = 0.0;
@@ -999,7 +1036,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					AVGCCtextfield.setBackground(Color.decode(componentsbgcolour));
 					AVGCCtextfield.setForeground(Color.decode(textcolour));
 					AVGCCtextfield.setText("AVGCC");
-					WeMovin.SetAVGCC(avgcc);
+					Controller.SetAVGCC(avgcc);
 				}
 			}	
 		});
@@ -1043,7 +1080,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					FanIntextfield.setEditable(false);
 					FanIntextfield.setBackground(Color.decode(selected));
 					FanIntextfield.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetFanIn(fanin);
+					Controller.SetFanIn(fanin);
 				}
 				else {
 					fanin = 0;
@@ -1051,7 +1088,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					FanIntextfield.setBackground(Color.decode(componentsbgcolour));
 					FanIntextfield.setForeground(Color.decode(textcolour));
 					FanIntextfield.setText("FanIn");
-					WeMovin.SetFanIn(fanin);
+					Controller.SetFanIn(fanin);
 				}
 			}	
 		});
@@ -1095,7 +1132,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					FanOutfieldtext.setEditable(false);
 					FanOutfieldtext.setBackground(Color.decode(selected));
 					FanOutfieldtext.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetFanOut(fanout);
+					Controller.SetFanOut(fanout);
 				}
 				else {
 					fanout = 0;
@@ -1103,7 +1140,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					FanOutfieldtext.setBackground(Color.decode(componentsbgcolour));
 					FanOutfieldtext.setForeground(Color.decode(textcolour));
 					FanOutfieldtext.setText("FanOut");
-					WeMovin.SetFanOut(fanout);
+					Controller.SetFanOut(fanout);
 				}
 			}
 			
@@ -1148,7 +1185,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					NOCtextfield.setEditable(false);
 					NOCtextfield.setBackground(Color.decode(selected));
 					NOCtextfield.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetNOC(noc);
+					Controller.SetNOC(noc);
 				}
 				else {
 					noc = 0;
@@ -1156,7 +1193,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					NOCtextfield.setBackground(Color.decode(componentsbgcolour));
 					NOCtextfield.setForeground(Color.decode(textcolour));
 					NOCtextfield.setText("NOC");
-					WeMovin.SetNOC(noc);
+					Controller.SetNOC(noc);
 				}
 			}	
 		});
@@ -1200,7 +1237,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					DITtextfield.setEditable(false);
 					DITtextfield.setBackground(Color.decode(selected));
 					DITtextfield.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetDIT(dit);
+					Controller.SetDIT(dit);
 				}
 				else {
 					dit = 0;
@@ -1208,7 +1245,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					DITtextfield.setBackground(Color.decode(componentsbgcolour));
 					DITtextfield.setForeground(Color.decode(textcolour));
 					DITtextfield.setText("DIT"); 
-					WeMovin.SetDIT(dit);
+					Controller.SetDIT(dit);
 				}
 			}			
 		});
@@ -1252,7 +1289,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					BUGStextfield.setEditable(false);
 					BUGStextfield.setBackground(Color.decode(selected));
 					BUGStextfield.setForeground(Color.decode(selectedtxtcolour));
-					WeMovin.SetB(bug1);
+					Controller.SetB(bug1);
 				}
 				else {
 					bug1 = 0;
@@ -1260,7 +1297,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					BUGStextfield.setBackground(Color.decode(componentsbgcolour));
 					BUGStextfield.setForeground(Color.decode(textcolour));
 					BUGStextfield.setText("BUGS"); 
-					WeMovin.SetB(bug1);
+					Controller.SetB(bug1);
 				}
 			}			
 		});
@@ -1269,23 +1306,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		panel.setBackground(Color.decode(componentsbgcolour));
 		panel.setBorder(new LineBorder(Color.decode(bordercolour)));
 		
-//		scrollPane_1 = new JScrollPane();
 		scrollPane_1.getViewport().setBackground(Color.decode(componentsbgcolour));
 		scrollPane_1.getViewport().setForeground(Color.decode(textcolour));
-		scrollPane_1.setBorder(new LineBorder(Color.decode(bordercolour)));
+		scrollPane_1.setBorder(new LineBorder(Color.decode(bordercolour)));	
 		
-		/*
-		DITcheckbox = new JCheckBox("New check box");
-		
-		BUGScheckbox = new JCheckBox("New check box");
-		
-		DITtextfield = new JTextField();
-		DITtextfield.setColumns(10);
-		
-		BUGStextfield = new JTextField();
-		BUGStextfield.setColumns(10);
-		*/		
-		
+		//group all components previously declared into a group layout that will compose the main frame 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -1427,7 +1452,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		contentPane.setLayout(gl_contentPane);
 		contentPane.setBackground(Color.decode(mainbackgroundcolour));
 
-		
+		//the following method changes the instruction panel's content to get the selected metric's stringbuffer
+		//containing the information of the affected are code from the output class and display it to users
 	    ListSelectionModel ColumnSelectionModel = table.getSelectionModel();
 	    ColumnSelectionModel.addListSelectionListener(new ListSelectionListener() {
 	      public void valueChanged(ListSelectionEvent e) {
@@ -1435,12 +1461,16 @@ public class MainFrame extends JFrame implements ActionListener{
 	    	  int colindex = table.getSelectedColumn();
 	    	  ArrayList<String> classnames = new ArrayList<>();
 	    	  
+	    	  //all if statements follow the same principles
+	    	  //check the index
 	    	  if(colindex == 1) {
 	    		  for(int i = 0; i < table.getRowCount(); i++) {
+	    			  //check that the value is too high therefore needs to be highlighted
 	    			  if((int) table.getValueAt(i, colindex) > 100) {
 	    				  classnames.add(table.getValueAt(i, 0).toString());
 	    			  }
 	    		  }
+	    		//call output class and get all the info stored in the stringbuffers called from the model classes to show here to the users
 	  			instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have too many lines of code,"+"\n"+"this can result in higher complexity and bugs."+"\n"+"Revist these classes!");
 	  			}
 	    	 
@@ -1516,6 +1546,8 @@ public class MainFrame extends JFrame implements ActionListener{
 	    		  }
 	    		  instructions.setText("The following classes:"+"\n"+classnames+"\n"+"Have a high number of Bugs and errors registered!"+"\n"+"Check the other metrics and try to solve the issues within your system to lower the number of bugs."+"\n"+Output.getbugoutput());
 	    	  }
+	    	  
+	    	  //if any other column other than the metric ones is selcted than the instruction panel is set to default
 	    	  else {
 	    		  instructions.setText("LOC = returns Lines of Code in the class"+"\n"+
 							"WMC = returns number of methods in each class"+"\n"+
@@ -1535,6 +1567,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	      });
 	}
 	
+	//methods that open the file choser and allow users to select appropriate folder paths
 	@Override
 	public void actionPerformed(ActionEvent e) {	 
 		
@@ -1563,6 +1596,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		}
 	}
 		
+	//method that creates scatterplot by taking x and y array values and plotting them before rendering the final plot and sending it 
+	//back to the be displayed in the right panel
     private JFreeChart createChart(final XYDataset dataset) {
         final JFreeChart chart = ChartFactory.createScatterPlot(
             "Scatterplot",             // chart title
